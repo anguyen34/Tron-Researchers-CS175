@@ -9,8 +9,8 @@ title:  Team
 ## USER 1
 ***UCI Net ID***: ucinetid1
 
-## USER 2
-***UCI Net ID***: ucinetid2
+## Trent Buckholz
+***UCI Net ID***: TBUCKHOL
 
 ## USER 3
 ***UCI Net ID***: ucinetid3
