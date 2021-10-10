@@ -6,7 +6,7 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
+## Anthony Nguyen
 ***UCI Net ID***: ANTHHN10
 
 ## Trent Buckholz
