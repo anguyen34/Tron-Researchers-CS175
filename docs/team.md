@@ -12,5 +12,5 @@ title:  Team
 ## Trent Buckholz
 ***UCI Net ID***: TBUCKHOL
 
-## USER 3
+## Brian Thai
 ***UCI Net ID***: BHTHAI1
