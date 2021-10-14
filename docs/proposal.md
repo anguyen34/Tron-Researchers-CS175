@@ -13,7 +13,7 @@ The inventory items and use case example scenarios can be seen below:
   - Potion of water breathing to go underwater
 
 ## AI/ML Algorithms
-Reinforcement learning with neural function approximator
+We want to reinforcement learning with neural function approximator.
 
 ## Evaluation Plan
 Our primary metric for evaluating the effectiveness of our agent will be how far the agent gets in the course. The course we build will be broken into steps (1, 2, 3, 4) depending on how far it gets, for example it starts at step 0 and if it completes the first jump for the platformer it would get to step 2, etc. The secondary metric would be the time it takes for the agent to get to the next step/phase of the course. The baseline would be that the agent is stuck at the very beginning (step 0) or keeps dying in lava.
