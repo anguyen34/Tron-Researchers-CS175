@@ -7,6 +7,7 @@ Source code: https://github.com/anguyen34/CS-175-Malmo-Engineers
 Reports:
 
 - [Proposal](proposal.html)
+- [Updated Proposal](proposalUpdate.html)
 - [Status](status.html)
 - [Final](final.html)
 
