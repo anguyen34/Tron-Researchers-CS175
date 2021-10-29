@@ -26,11 +26,15 @@
     {% assign current = page.url | downcase | split: '/' %}
     {% assign statusClass = 'disabled' %}
     {% assign proposalClass = 'disabled' %}
+    {% assign proposalUpdateClass = 'disabled' %}
     {% assign finalClass = 'disabled' %}
     {% for page in site.html_pages %}
       <!--h1>{{ page.url }}</h1-->
       {% if page.url == '/proposal.html' %}
           {% assign proposalClass = '' %}
+      {% endif %}
+      {% if page.url == '/proposalUpdate.html' %}
+          {% assign proposalUpdateClass = '' %}
       {% endif %}
       {% if page.url == '/status.html' %}
           {% assign statusClass = '' %}
@@ -61,6 +65,7 @@
           <ul class="nav navbar-nav">
             <li class="{% if current[1] == 'index.html' or current[1] == %} active {% endif %}"><a href="index.html">Home</a></li>
             <li class="{{ proposalClass }}{% if current[1] == 'proposal.html' %} active {% endif %}"><a href="proposal.html">Proposal</a></li>
+	    <li class="{{ proposalUpdateClass }}{% if current[1] == 'proposalUpdate.html' %} active {% endif %}"><a href="proposalUpdate.html">Updated Proposal</a></li>
             <li class="{{ statusClass }}{% if current[1] == 'status.html' %} active {% endif %}"><a href="status.html">Status</a></li>
             <li class="{{ finalClass }}{% if current[1] == 'final.html' %} active {% endif %}"><a href="final.html">Final</a></li>
             <li class="{% if current[1] == 'team.html' %} active {% endif %}"><a href="team.html">Team Details</a></li>
