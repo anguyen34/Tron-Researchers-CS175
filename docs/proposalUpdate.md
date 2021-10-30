@@ -9,10 +9,10 @@ We will be using ColosseumRL to study the effect of changing certain parameters 
 
 ## AI/ML Algorithms
 We will be using reinforcement learning with the following 4 approximators:
-	- Random Forests
-	- Neural Network
-	- Monte Carlo Search Tree (most simple therefore our baseline)
-	- Ensemble (containing all of the above)
+- Random Forests
+- Neural Network
+- Monte Carlo Search Tree (most simple therefore our baseline)
+- Ensemble (containing all of the above)
 
 
 ## Evaluation Plan
