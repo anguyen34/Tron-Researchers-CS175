@@ -16,6 +16,11 @@ We will be using reinforcement learning with the following 4 approximators:
 
 
 ## Evaluation Plan
+**Quantitative:**
+As we are studying the effect of modifying certain parameters on the game, our metric will be the change in each parameter between games and how much that parameter change affected the score between games for each policy. For our secondary goal of finding the most optimal parameter configuration for each model, our metric will be the change in the score and number of turns taken to expend all pieces for an agent. The baseline for our primary goal will be the assumption all parameters will affect the agent decision/game outcome equally, and we will be researching if this is true.
+
+**Qualitative:**
+
  
 
 ## Appointment with the Instructor
