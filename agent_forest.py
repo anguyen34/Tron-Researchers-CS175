@@ -5,6 +5,6 @@
 import numpy as np
 from colosseumrl.envs.blokus import BlokusEnvironment
 
-class EnsembleAgent:
+class RForestAgent:
   def __init__(self):
     pass
