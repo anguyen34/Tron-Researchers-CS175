@@ -3,7 +3,7 @@
 # Brain Thai
 
 import numpy as np
-from colosseumrl.envs.blokus import BlokusEnvironment
+from colosseumrl.envs.blokus import BlokusEnvironment as be
 
 class MCSearchAgent:
   '''
