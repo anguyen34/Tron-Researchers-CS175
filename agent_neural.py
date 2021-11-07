@@ -156,7 +156,7 @@ config['compress_observations'] = False
 config['n_step'] = 2
 config["framework"] = "torch"
 
-# All of the models will use the same network as before
+# Dummy agents
 agent_config_dummy = {
     "model": {
         "vf_share_layers": True,
@@ -166,6 +166,7 @@ agent_config_dummy = {
     }
 }
 
+# Agent with changed params
 agent_config_trained = {
     "model": {
         "vf_share_layers": True,
