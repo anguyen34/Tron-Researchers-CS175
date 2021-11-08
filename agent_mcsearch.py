@@ -85,9 +85,11 @@ class MCSearchAgent:
         self.render()
         return cumulative_reward
 
+    # TBD decided Monte Carlo/Q-value scoring.
     def score(players, pno, rewards, terminal, winners):
         pass
 
+    # Gather Q/Score values for each move.
     def choose_qvals(self, pno):
         moves = {'forward': 0, 'left': 0, 'right': 0}
         for m in moves:
@@ -97,6 +99,7 @@ class MCSearchAgent:
             moves[m] = self.search(state_clone, players_clone, env_clone, m, pno, 0)
         return moves
 
+    # Recursive Monte Carlo
     def search(self, state, players, env, pmove, pno, depth):
         actions = [None] * len(self.players)
         actions[pno] = pmove
@@ -122,6 +125,7 @@ class MCSearchAgent:
                             scores[m] = self.search(state_clone, players_clone, env_clone, m, pno, depth + 1)
                         return max(scores.values())
 
+    # Choose action w/ probability of randomness
     def choose_action(self, pno):
         # select the next action
         rnd = random.random()
