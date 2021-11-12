@@ -2,7 +2,6 @@
 # Anthony Nguyen
 # Brain Thai
 
-import numpy as np
 import random
 from copy import deepcopy
 
@@ -11,11 +10,6 @@ from time import sleep
 from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
 
-import gym
-from gym.spaces import Dict, Discrete, Box
-
-SEED = 12345
-np.random.seed(SEED)
 
 class MCSearchAgent:
     def __init__(self, depth, board_size=15, num_players=4):
@@ -26,15 +20,8 @@ class MCSearchAgent:
         self.test_depth = None
         self.renderer = TronRender(board_size, num_players)
 
-        self.epsilon = 0.01 # chance of taking a random action instead of the bes
+        self.epsilon = 0.01 # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
-
-        self.observation_space = Dict({
-            'board': Box(0, num_players, shape=(board_size, board_size)),
-            'heads': Box(0, np.infty, shape=(num_players,)),
-            'directions': Box(0, 4, shape=(num_players,)),
-            'deaths': Box(0, num_players, shape=(num_players,))
-        })
 
     def reset(self):
         self.state, self.players = self.env.new_state()
@@ -85,21 +72,18 @@ class MCSearchAgent:
         self.render()
         return cumulative_reward
 
-    # TBD decided Monte Carlo/Q-value scoring.
     def score(players, pno, rewards, terminal, winners):
         pass
 
-    # Gather Q/Score values for each move.
     def choose_qvals(self, pno):
         moves = {'forward': 0, 'left': 0, 'right': 0}
         for m in moves:
             env_clone = deepcopy(self.env)
-            state_clone = deepcopy(self.states)
+            state_clone = deepcopy(self.state)
             players_clone = deepcopy(self.players)
             moves[m] = self.search(state_clone, players_clone, env_clone, m, pno, 0)
         return moves
 
-    # Recursive Monte Carlo
     def search(self, state, players, env, pmove, pno, depth):
         actions = [None] * len(self.players)
         actions[pno] = pmove
@@ -125,7 +109,6 @@ class MCSearchAgent:
                             scores[m] = self.search(state_clone, players_clone, env_clone, m, pno, depth + 1)
                         return max(scores.values())
 
-    # Choose action w/ probability of randomness
     def choose_action(self, pno):
         # select the next action
         rnd = random.random()
