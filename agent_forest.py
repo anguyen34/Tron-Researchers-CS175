@@ -4,7 +4,6 @@
 
 import random
 from copy import deepcopy
-from re import I
 
 from matplotlib import cm
 from time import sleep
