@@ -15,7 +15,7 @@ import numpy as np
 
 # Features: Previous move, current board state, actual reward
 # Predict reward based on next move and current board state
-class MCSearchAgent:
+class MCForestAgent:
     def __init__(self, depth, board_size=15, num_players=4, estimators=50):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.state = None
@@ -129,9 +129,9 @@ class MCSearchAgent:
 
 
 
-agent = MCSearchAgent
+agent = MCForestAgent
 num_epoch = 100
 test_epochs = 1
 for epoch in range(num_epoch):
     print("Training iteration: {}".format(epoch), end='')
-    MCSearchAgent
+    MCForestAgent
