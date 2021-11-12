@@ -1,7 +1,3 @@
-# Trent Buckholz
-# Anthony Nguyen
-# Brain Thai
-
 import numpy as np
 import random
 
@@ -22,12 +18,8 @@ from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
 from ray.rllib.models.preprocessors import Preprocessor
 from ray.rllib.models import ModelCatalog
-import os
-os.environ['SDL_VIDEODRIVER']='x11'
-
 SEED = 12345
 np.random.seed(SEED)
-
 # A full free-for-all version of tron
 class TronRayEnvironment(MultiAgentEnv):
     action_space = Discrete(3)
@@ -64,7 +56,7 @@ class TronRayEnvironment(MultiAgentEnv):
             actions.append(action_to_string[action])
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
-
+        print(self.state)
         num_players = self.env.num_players
         alive_players = set(self.players)
 
@@ -137,7 +129,6 @@ class TronExtractBoard(Preprocessor):
         heads = np.expand_dims(heads, -1)
         
         return np.concatenate([board, heads], axis=-1)
-
 # Initialize training environment
 ray.init()
 
@@ -158,8 +149,8 @@ config['compress_observations'] = False
 config['n_step'] = 2
 config["framework"] = "torch"
 
-# Dummy agents
-agent_config_dummy = {
+# All of the models will use the same network as before
+agent_config = {
     "model": {
         "vf_share_layers": True,
         "conv_filters": [(512, 5, 1), (256, 3, 2), (128, 3, 2), (64, 5, 1)],
@@ -168,20 +159,9 @@ agent_config_dummy = {
     }
 }
 
-# Agent with changed params
-agent_config_trained = {
-    "model": {
-        "vf_share_layers": True,
-        "conv_filters": [(512, 5, 1), (256, 3, 2), (128, 3, 2), (64, 5, 1)],
-        "fcnet_hiddens": [64],
-        "custom_preprocessor": 'tron_prep'
-    }
-}
-
-# index 0 = agent with changed params
 config['multiagent'] = {
         "policy_mapping_fn": lambda x, episode, **kwargs: str(x),
-        "policies": {str(i): (None, env.observation_space, env.action_space, agent_config_trained if i == 0 else agent_config_dummy) for i in range(env.env.num_players)}
+        "policies": {str(i): (None, env.observation_space, env.action_space, agent_config) for i in range(env.env.num_players)}
 }
        
 trainer = DQNTrainer(config, "tron_multi_player")

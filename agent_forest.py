@@ -4,7 +4,6 @@
 
 import random
 from copy import deepcopy
-from re import I
 
 from matplotlib import cm
 from time import sleep
@@ -12,12 +11,15 @@ from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
 from sklearn.ensemble import RandomForestRegressor
 import numpy as np
+import os
+os.environ['SDL_VIDEODRIVER']='x11'
 
 # Features: Previous move, current board state, actual reward
 # Predict reward based on next move and current board state
 class MCForestAgent:
     def __init__(self, depth, board_size=15, num_players=4, estimators=50):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
+        self.num_players = num_players
         self.state = None
         self.players = None
         self.max_depth = depth
@@ -25,8 +27,8 @@ class MCForestAgent:
         self.test_depth = None
         self.renderer = TronRender(board_size, num_players)
         self.rforests = []
-        self.train_states = [np.array()] * num_players
-        self.train_rewards = [np.array()] * num_players
+        self.train_states = [[] for _ in range(num_players)]
+        self.train_rewards = [[] for _ in range(num_players)]
         self.gno = 0
 
         self.epsilon = 0.01 # chance of taking a random action instead of the best
@@ -41,16 +43,25 @@ class MCForestAgent:
         actions = []
 
         for player in self.players:
-            actions.append(self.choose_action(self.prev_r, self.prev_s, player))
+            actions.append(self.choose_action(player))
 
+        old_players = deepcopy(self.players)
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
 
         # Saving additional data for games.
         b = self.state[0].flatten()
-        for r in range(self.num_players):
-            self.state[0]
-            self.train_states[r] = np.append(self.train_states[r], [act_to_str[actions[r]], self.state[1][r], self.state[2][r]], b)
-            self.train_rewards[r] = np.append(self.train_rewards[r], rewards[r])
+        for r in range(len(old_players)):
+          try:
+            act_to_str_np = np.array([act_to_str[actions[r]], self.state[1][old_players[r]], self.state[2][old_players[r]]])
+          except IndexError as err:
+            print(actions)
+            print(old_players)
+            raise err
+          act_to_str_np = np.append(act_to_str_np, b)
+
+
+          self.train_states[old_players[r]].append(act_to_str_np)
+          self.train_rewards[old_players[r]].append(rewards[old_players[r]])
 
         num_players = self.env.num_players
         alive_players = set(self.players)
@@ -104,6 +115,7 @@ class MCForestAgent:
             # First 3 features to do are planned move, head, direction
             move_to_do = np.array([act_to_str[m], self.state[1][pno], self.state[2][pno]])
             move_to_do = np.append(move_to_do, b)
+            move_to_do = move_to_do.reshape(1, -1)
             moves[m] = self.rforests[pno].predict(move_to_do)
         return moves
 
@@ -122,16 +134,19 @@ class MCForestAgent:
 
     def train(self):
         self.rforests = []
-        for i in range(self.players):
+        for i in range(len(self.players)):
+            train_states_np = np.array(self.train_states[i])
+            train_rewards_np = np.array(self.train_rewards[i])
             rf = RandomForestRegressor(self.est)
-            rf.fit(self.train_states[i], self.train_rewards[i])
+            #train_states_np.reshape(1, -1)
+            rf.fit(train_states_np, train_rewards_np)
             self.rforests.append(rf)
 
 
 
-agent = MCForestAgent
+agent = MCForestAgent(depth=10)
 num_epoch = 100
 test_epochs = 1
 for epoch in range(num_epoch):
-    print("Training iteration: {}".format(epoch), end='')
-    MCForestAgent
+    print("Training iteration: {}".format(epoch))
+    agent.test()
