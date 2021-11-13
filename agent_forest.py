@@ -51,17 +51,12 @@ class MCForestAgent:
         # Saving additional data for games.
         b = self.state[0].flatten()
         for r in range(len(old_players)):
-          try:
             act_to_str_np = np.array([act_to_str[actions[r]], self.state[1][old_players[r]], self.state[2][old_players[r]]])
-          except IndexError as err:
-            print(actions)
-            print(old_players)
-            raise err
-          act_to_str_np = np.append(act_to_str_np, b)
+            act_to_str_np = np.append(act_to_str_np, b)
 
 
-          self.train_states[old_players[r]].append(act_to_str_np)
-          self.train_rewards[old_players[r]].append(rewards[old_players[r]])
+            self.train_states[old_players[r]].append(act_to_str_np)
+            self.train_rewards[old_players[r]].append(rewards[old_players[r]])
 
         num_players = self.env.num_players
         alive_players = set(self.players)
@@ -130,7 +125,12 @@ class MCForestAgent:
             return self.actions[act_no]
         else:
             qvals = self.choose_qvals(pno)
-            return max(qvals, key=qvals.get)
+            max_qval = max(qvals.values())
+            dup_max = [k for k, v in qvals.items() if v == max_qval]
+            if len(dup_max) > 1:
+                return dup_max[random.randint(0, len(dup_max) - 1)]
+            else:
+                return max(qvals, key=qvals.get)
 
     def train(self):
         self.rforests = []
