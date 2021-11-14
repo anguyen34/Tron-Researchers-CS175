@@ -4,7 +4,9 @@ title:  Home
 ---
 
 Source code: https://github.com/anguyen34/Tron-Researchers-CS175
+
 Project Subject: https://colosseumrl.igb.uci.edu/
+
 Reports:
 
 - [Proposal](proposal.html)
