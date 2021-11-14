@@ -1,1 +1,1 @@
-# CS-175-Hazard-Runners
+# Tron-Researchers-CS175
