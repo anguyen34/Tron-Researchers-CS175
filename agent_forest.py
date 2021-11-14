@@ -29,6 +29,7 @@ class MCForestAgent:
         self.rforests = []
         self.train_states = [[] for _ in range(num_players)]
         self.train_rewards = [[] for _ in range(num_players)]
+        self.cumulative_rewards = {}
         self.gno = 0
 
         self.epsilon = 0.01 # chance of taking a random action instead of the best
@@ -36,6 +37,7 @@ class MCForestAgent:
 
     def reset(self):
         self.state, self.players = self.env.new_state()
+        self.cumulative_rewards = {}
         return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
     def step(self):
@@ -48,6 +50,11 @@ class MCForestAgent:
         old_players = deepcopy(self.players)
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
 
+        for player in self.players:
+            if player not in self.cumulative_rewards:
+                self.cumulative_rewards[player] = 0
+            self.cumulative_rewards[player] += rewards[player]
+
         # Saving additional data for games.
         b = self.state[0].flatten()
         for r in range(len(old_players)):
@@ -56,7 +63,7 @@ class MCForestAgent:
 
 
             self.train_states[old_players[r]].append(act_to_str_np)
-            self.train_rewards[old_players[r]].append(rewards[old_players[r]])
+            self.train_rewards[old_players[r]].append(self.cumulative_rewards[old_players[r]])
 
         num_players = self.env.num_players
         alive_players = set(self.players)
@@ -76,11 +83,13 @@ class MCForestAgent:
     def close(self):
         self.renderer.close()
         
-    def test(self, frame_time = 0.1):
+    def test(self, num_epoch, frame_time = 0.1):
+        #file = open("cumulative_rewards_file", 'w')
         total_rewards = []
         num_players = self.env.num_players
-        self.close()
-        for i in range(5):
+        for i in range(num_epoch):
+            self.close()
+            print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
                 self.train()
@@ -93,8 +102,12 @@ class MCForestAgent:
                 state, reward, done, results = self.step()
                 cumulative_reward += sum(reward.values())
                 self.render()
-                
                 sleep(frame_time)
+
+
+            #if i % 10 == 0:
+                #file.write(str(self.cumulative_rewards.values()) + '\n')
+                
             
             self.render()
             total_rewards.append(cumulative_reward)
@@ -138,15 +151,12 @@ class MCForestAgent:
             train_states_np = np.array(self.train_states[i])
             train_rewards_np = np.array(self.train_rewards[i])
             rf = RandomForestRegressor(self.est)
-            #train_states_np.reshape(1, -1)
-            rf.fit(train_states_np, train_rewards_np)
+            rf = rf.fit(train_states_np, train_rewards_np)
             self.rforests.append(rf)
 
 
-
-agent = MCForestAgent(depth=10)
-num_epoch = 100
-test_epochs = 1
-for epoch in range(num_epoch):
-    print("Training iteration: {}".format(epoch))
-    agent.test()
+if __name__ == "__main__":
+    agent = MCForestAgent(depth=50)
+    num_epoch = 100
+    total_reward = agent.test(num_epoch)
+    print("Total Reward: {}".format(total_reward))
