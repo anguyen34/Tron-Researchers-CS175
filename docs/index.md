@@ -3,9 +3,13 @@ layout: default
 title:  Home
 ---
 
-### Source code: [https://github.com/anguyen34/Tron-Researchers-CS175](https://github.com/anguyen34/Tron-Researchers-CS175)
+### Source code: 
 
-### ColosseumRL: [https://colosseumrl.igb.uci.edu/](https://colosseumrl.igb.uci.edu/)
+[https://github.com/anguyen34/Tron-Researchers-CS175](https://github.com/anguyen34/Tron-Researchers-CS175)
+
+### ColosseumRL: 
+
+[https://colosseumrl.igb.uci.edu/](https://colosseumrl.igb.uci.edu/)
 
 ### Project Summary:
 
