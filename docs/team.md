@@ -3,6 +3,8 @@ layout: default
 title:  Team
 ---
 
+## Team
+
 ### Anthony Nguyen
 ***UCI Net ID***: ANTHHN10
 
