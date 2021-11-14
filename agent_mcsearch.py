@@ -31,7 +31,7 @@ class MCSearchAgent:
         actions = []
 
         for player in self.players:
-            actions.append(self.choose_action(self.prev_r, self.prev_s, player))
+            actions.append(self.choose_action(player))
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
         num_players = self.env.num_players
@@ -53,27 +53,36 @@ class MCSearchAgent:
     def close(self):
         self.renderer.close()
         
-    def test(self, trainer, frame_time = 0.1):
+    def test(self, num_epoch, frame_time = 0.1):
         num_players = self.env.num_players
-        self.close()
-        state = self.reset()
-        done = {"__all__": False}
-        action = {str(i): None for i in range(num_players)}
-        reward = {str(i): None for i in range(num_players)}
-        cumulative_reward = 0
-        
-        while not done['__all__']:
-            state, reward, done, results = self.step()
-            cumulative_reward += sum(reward.values())
-            self.render()
+        for i in range(num_epoch):
+            self.close()
+            print("Training iteration: {}".format(i))
+            state = self.reset()
+            done = {"__all__": False}
+            action = {str(i): None for i in range(num_players)}
+            reward = {str(i): None for i in range(num_players)}
+            cumulative_reward = 0
             
-            sleep(frame_time)
+            while not done['__all__']:
+                state, reward, done, results = self.step()
+                cumulative_reward += sum(reward.values())
+                self.render()
+                
+                sleep(frame_time)
         
         self.render()
         return cumulative_reward
 
-    def score(players, pno, rewards, terminal, winners):
-        pass
+    def score(self, players, pno, rewards, winners, state):
+        DIED = -50
+        WON = 50
+        if pno not in players:
+            return DIED
+        if winners is not None and pno in winners:
+            return WON
+        board = state[0].flatten()
+        return rewards[pno] * len([i for i in board if i == pno])
 
     def choose_qvals(self, pno):
         moves = {'forward': 0, 'left': 0, 'right': 0}
@@ -98,8 +107,7 @@ class MCSearchAgent:
                     actions[p % len(self.players)] = m3
                     state_new, players_new, rewards, terminal, winners = env.next_state(state, players, actions)
                     if depth == self.max_depth:
-                        #return self.score(players_new, pno, rewards, terminal, winners)
-                        return rewards[pno]
+                        return self.score(players_new, pno, rewards, winners, state_new)
                     else:
                         scores = {'forward': 0, 'left': 0, 'right': 0}
                         for m in scores:
@@ -119,9 +127,8 @@ class MCSearchAgent:
             qvals = self.choose_qvals(pno)
             return max(qvals, key=qvals.get)
 
-agent = MCSearchAgent
-num_epoch = 100
-test_epochs = 1
-for epoch in range(num_epoch):
-    print("Training iteration: {}".format(epoch), end='')
-    MCSearchAgent
+if __name__ == "__main__":
+    agent = MCSearchAgent(depth=2)
+    num_epoch = 100
+    test_epochs = 1
+    agent.test(num_epoch)
