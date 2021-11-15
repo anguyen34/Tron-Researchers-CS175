@@ -5,7 +5,7 @@
 import random
 from copy import deepcopy
 
-from matplotlib import cm
+import matplotlib.pyplot as plt
 from time import sleep
 from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
@@ -31,6 +31,9 @@ class MCForestAgent:
         self.train_rewards = [[] for _ in range(num_players)]
         self.cumulative_rewards = {}
         self.gno = 0
+        self.data_collect_on = False
+        self.PLAYER_TRAIN_INDEX = 0
+        self.normalize_player_train_wins = False
 
         self.epsilon = 0.01 # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
@@ -49,6 +52,10 @@ class MCForestAgent:
 
         old_players = deepcopy(self.players)
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
+        if winners is not None and self.PLAYER_TRAIN_INDEX in winners:
+            self.normalize_player_train_wins = True
+        else:
+            self.normalize_player_train_wins = False
 
         for player in self.players:
             if player not in self.cumulative_rewards:
@@ -83,10 +90,12 @@ class MCForestAgent:
     def close(self):
         self.renderer.close()
         
-    def test(self, num_epoch, frame_time = 0.1):
-        #file = open("cumulative_rewards_file", 'w')
+    def test(self, num_epoch, frame_time = 0.1, data_collect_on = False):
         total_rewards = []
         num_players = self.env.num_players
+        # init player one's reward list
+        self.data_collect_on = data_collect_on
+        player_reward_data = []
         for i in range(num_epoch):
             self.close()
             print("Training iteration: {}".format(i))
@@ -103,15 +112,20 @@ class MCForestAgent:
                 cumulative_reward += sum(reward.values())
                 self.render()
                 sleep(frame_time)
-
-
-            #if i % 10 == 0:
-                #file.write(str(self.cumulative_rewards.values()) + '\n')
-                
-            
+            # Add player one's cumulative reward's to list
+            if self.data_collect_on:
+                PLAYER_WIN_AMOUNT = 9
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
             self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
+        # Graph player one's cumulative reward list as Y and iterations 0-99 as X
+        if self.data_collect_on:
+            plt.plot([i for i in range(0, num_epoch)], player_reward_data)
+            plt.xlabel("Iterations (games)")
+            plt.ylabel("Reward")
+            plt.title("Random Forest Cumulative Reward Per Game")
+            plt.savefig('agent_forest_data_baseline.png', bbox_inches='tight')
         return total_rewards
 
     def choose_qvals(self, pno):
@@ -157,6 +171,6 @@ class MCForestAgent:
 
 if __name__ == "__main__":
     agent = MCForestAgent(depth=50)
-    num_epoch = 100
-    total_reward = agent.test(num_epoch)
+    num_epoch = 500
+    total_reward = agent.test(num_epoch, data_collect_on=True)
     print("Total Reward: {}".format(total_reward))
