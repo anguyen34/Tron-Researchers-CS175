@@ -9,8 +9,9 @@ We are using ColosseumRL to study the effect of changing certain parameters (e.g
 
 ## Approach:
 
-For out project we make use of four different approximators, three of which are machine learning algorithms. For the machine learning algorithms we use a neural network, a random forest, and an ensemble. The fourth approximator used is a Monte Carlo search tree. For the neural network approximator, deep Q-learning is used to train the agent to minimize its loss according to the function:
+For our project we make use of four different approximators, three of which are machine learning algorithms. For the machine learning algorithms we use a neural network, a random forest, and an ensemble. The fourth approximator used is a Monte Carlo search tree. All four approximators use a greedy epsilion policy, where epsilon determines the probability a random move is chosen instead of a predicted move. For the neural network approximator, deep Q-learning is used to train the agent to minimize its loss according to the function:
 ![](/../main/images/loss.png?raw=true)
+Then the move taken by the agent is in Tron is based on the computed action from the neural network. In the random forest we use a regressor to predict Tron reward values based on the current board state, then the move with the greatest predicted reward value is chosen. The random forest regressor agent is trained on the various game states and corresponding rewards of its past games. The ensemble is a voting regressor composed of an AdaBoost regressor, a K-Nearest neighbors regressor, a Multi-Layer perceptron regressor, and a support vector machine regressor. Training and choosing moves for the ensemble agent is the same as the random forest regressor. The fourth and final approximator used is a Monte Carlo search tree, which chooses rewards based on the calculated rewards at each leaf node in the search tree.
 
 ## Evaluation:
 
