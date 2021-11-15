@@ -129,7 +129,7 @@ class MCEnsembleAgent:
             plt.xlabel("Iterations (games)")
             plt.ylabel("Reward")
             plt.title("Ensemble Cumulative Reward Per Game")
-            plt.savefig('agent_ensemble_data_baseline.png', bbox_inches='tight')
+            plt.savefig('docs/images/agent_ensemble_data_baseline.png', bbox_inches='tight')
         return total_rewards
 
     def choose_qvals(self, pno):
@@ -180,6 +180,6 @@ class MCEnsembleAgent:
 
 if __name__ == "__main__":
     agent = MCEnsembleAgent(depth=50)
-    num_epoch = 500
+    num_epoch = 1
     total_reward = agent.test(num_epoch, data_collect_on=True)
     print("Total Reward: {}".format(total_reward))

@@ -92,8 +92,8 @@ class MCSearchAgent:
             plt.plot([i for i in range(0, num_epoch)], player_reward_data)
             plt.xlabel("Iterations (games)")
             plt.ylabel("Reward")
-            plt.title("Neural Network Cumulative Reward Per Game")
-            plt.savefig('agent_neural_data_baseline.png', bbox_inches='tight')
+            plt.title("Monte Carlo Cumulative Reward Per Game")
+            plt.savefig('docs/images/agent_mcsearch_data_baseline.png', bbox_inches='tight')
         
         self.render()
         return cumulative_reward

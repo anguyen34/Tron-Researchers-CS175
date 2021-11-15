@@ -125,7 +125,7 @@ class MCForestAgent:
             plt.xlabel("Iterations (games)")
             plt.ylabel("Reward")
             plt.title("Random Forest Cumulative Reward Per Game")
-            plt.savefig('agent_forest_data_baseline.png', bbox_inches='tight')
+            plt.savefig('docs/images/agent_forest_data_baseline.png', bbox_inches='tight')
         return total_rewards
 
     def choose_qvals(self, pno):
