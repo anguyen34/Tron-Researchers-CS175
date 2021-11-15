@@ -23,3 +23,9 @@ To determine the most influential and optimal parameters for an approximator, we
 ## Remaining Goals and Challenges:
 
 ## Resources Used:
+
+- [ColosseumRL](https://colosseumrl.igb.uci.edu/)
+- ColosseumRL setup from course website
+- [SciKit-Learn](https://scikit-learn.org/stable/)
+- [Ray](https://www.ray.io/)
+- [Gym](https://gym.openai.com/)
