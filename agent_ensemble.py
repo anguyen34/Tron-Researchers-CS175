@@ -180,6 +180,6 @@ class MCEnsembleAgent:
 
 if __name__ == "__main__":
     agent = MCEnsembleAgent(depth=50)
-    num_epoch = 1
+    num_epoch = 200
     total_reward = agent.test(num_epoch, data_collect_on=True)
     print("Total Reward: {}".format(total_reward))
