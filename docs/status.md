@@ -22,10 +22,12 @@ To determine the most influential and optimal parameters for an approximator, we
 
 ## Remaining Goals and Challenges:
 
+In the current state of our code all four approximators have been implemented and work for playing Tron. The only parts of the code that is missing is code to run through all of the parameters
+
 ## Resources Used:
 
 - [ColosseumRL](https://colosseumrl.igb.uci.edu/)
-- ColosseumRL setup from course website
+- ColosseumRL setup/example from course website
 - [SciKit-Learn](https://scikit-learn.org/stable/)
 - [Ray](https://www.ray.io/)
 - [Gym](https://gym.openai.com/)
