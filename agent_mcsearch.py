@@ -5,7 +5,7 @@
 import random
 from copy import deepcopy
 
-from matplotlib import cm
+import matplotlib.pyplot as plt
 from time import sleep
 from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
@@ -19,12 +19,17 @@ class MCSearchAgent:
         self.max_depth = depth
         self.test_depth = None
         self.renderer = TronRender(board_size, num_players)
+        self.data_collect_on = False
+        self.PLAYER_TRAIN_INDEX = 0
+        self.normalize_player_train_wins = False
+        self.cumulative_reward_player_train = 0
 
         self.epsilon = 0.01 # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
 
     def reset(self):
         self.state, self.players = self.env.new_state()
+        self.cumulative_reward_player_train = 0
         return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
     def step(self):
@@ -34,6 +39,11 @@ class MCSearchAgent:
             actions.append(self.choose_action(player))
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
+        if winners is not None and self.PLAYER_TRAIN_INDEX in winners:
+            self.normalize_player_train_wins = True
+        else:
+            self.normalize_player_train_wins = False
+        self.cumulative_reward_player_train += (rewards[self.PLAYER_TRAIN_INDEX] if (self.PLAYER_TRAIN_INDEX in self.players) else 0)
         num_players = self.env.num_players
         alive_players = set(self.players)
 
@@ -53,8 +63,11 @@ class MCSearchAgent:
     def close(self):
         self.renderer.close()
         
-    def test(self, num_epoch, frame_time = 0.1):
+    def test(self, num_epoch, frame_time = 0.1, data_collect_on=False):
         num_players = self.env.num_players
+        # init player one's reward list
+        self.data_collect_on = data_collect_on
+        player_reward_data = []
         for i in range(num_epoch):
             self.close()
             print("Training iteration: {}".format(i))
@@ -70,6 +83,17 @@ class MCSearchAgent:
                 self.render()
                 
                 sleep(frame_time)
+            # Add player one's cumulative reward's to list
+            if self.data_collect_on:
+                PLAYER_WIN_AMOUNT = 9
+                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+        # Graph player one's cumulative reward list as Y and iterations 0-99 as X
+        if self.data_collect_on:
+            plt.plot([i for i in range(0, num_epoch)], player_reward_data)
+            plt.xlabel("Iterations (games)")
+            plt.ylabel("Reward")
+            plt.title("Neural Network Cumulative Reward Per Game")
+            plt.savefig('agent_neural_data_baseline.png', bbox_inches='tight')
         
         self.render()
         return cumulative_reward
@@ -129,6 +153,5 @@ class MCSearchAgent:
 
 if __name__ == "__main__":
     agent = MCSearchAgent(depth=2)
-    num_epoch = 100
-    test_epochs = 1
-    agent.test(num_epoch)
+    num_epoch = 500
+    agent.test(num_epoch, data_collect_on=True)

@@ -36,6 +36,7 @@ class TronRayEnvironment(MultiAgentEnv):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.state = None
         self.players = None
+        self.epsilon = 0.01
 
         self.renderer = TronRender(board_size, num_players)
 
@@ -61,6 +62,9 @@ class TronRayEnvironment(MultiAgentEnv):
 
         for player in self.players:
             action = action_dict.get(str(player), 0)
+            rnd = random.random()
+            if rnd < self.epsilon:
+                action = random.random(0, len(action_to_string))
             actions.append(action_to_string[action])
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
