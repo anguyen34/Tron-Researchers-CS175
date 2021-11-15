@@ -3,14 +3,13 @@ layout: default
 title:  Team
 ---
 
-# {{ page.title }}
+## Team
 
-
-## Anthony Nguyen
+### Anthony Nguyen
 ***UCI Net ID***: ANTHHN10
 
-## Trent Buckholz
+### Trent Buckholz
 ***UCI Net ID***: TBUCKHOL
 
-## Brian Thai
+### Brian Thai
 ***UCI Net ID***: BHTHAI1
