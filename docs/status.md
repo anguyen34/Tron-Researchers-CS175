@@ -10,7 +10,7 @@ We are using ColosseumRL to study the effect of changing certain parameters (e.g
 ## Approach:
 
 For out project we make use of four different approximators, three of which are machine learning algorithms. For the machine learning algorithms we use a neural network, a random forest, and an ensemble. The fourth approximator used is a Monte Carlo search tree. For the neural network approximator, deep Q-learning is used to train the agent to minimize its loss according to the function:
-![Loss is based on state, action, reward, and next state tuples,](https://github.com/anguyen34/Tron-Researchers-CS175/main/images/loss.png?raw=true)
+![](https://github.com/anguyen34/Tron-Researchers-CS175/main/images/loss.png?raw=true)
 
 ## Evaluation:
 
