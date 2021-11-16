@@ -30,7 +30,7 @@ The reward plots for the baseline parameter set of the ensemble and random fores
 For the baseline plots of observed agent reward vs other agent's average reward, the data is very inconsistent and tends to oscillate around 0 which is the predicted value for this since all agents have the same parameters for these plots and these parameters have not been changed. The plots showing the baseline cumulative reward for the observed agent are a useful visualization of the average performance of the model without changing parameters and leaving only default parameters.
 
 Qualitative:  
-  To evaluate the qualitative performance in our approximators we will observe the gameplay of our agent for which we change parameters in order to see and take notes of any observed performance increases and more intelligent behavior. This type of evaluation can be seen in our video summary which showcases some of the agent's gameplay. This gameplay can be observed for perceived increases in performance and intelligent behavior as a secondaory metric for evaulating our models, in addition to the numbers given from our quantitative analysis.
+  To evaluate the qualitative performance in our approximators we will observe the gameplay of our agent for which we change parameters in order to see and take notes of any observed performance increases and more intelligent behavior. This type of evaluation can be seen in our video summary which showcases some of the agent's gameplay. This gameplay can be observed for perceived increases in score as a secondaory metric for evaulating our models, in addition to the numbers given from our quantitative analysis.
 
 ## Remaining Goals and Challenges:
 
