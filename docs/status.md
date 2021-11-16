@@ -25,7 +25,7 @@ The reward plots for the baseline parameter set of the ensemble and random fores
 ![](images/agent_forest_data_baseline.png?raw=true)
 ![](images/agent_forest_data_delta_reward.png?raw=true)
 ![](images/agent_ensemble_data_baseline.png?raw=true)
-![](images/agent_ensemble_data_delta_reward.png?raw=true) 
+![](images/agent_ensemble_data_delta_reward.png?raw=true)  
 For the baseline plots of observed agent reward vs other agent's average reward, the data is very inconsistent and tends to oscillate around 0 which is the predicted value for this since all agents have the same parameters for these plots and these parameters have not been changed. The plots showing the baseline cumulative reward for the observed agent are a useful visualization of the average performance of the model without changing parameters and leaving only default parameters.
 
 Qualitative: 
