@@ -39,3 +39,7 @@ Based on our experiences of implementing and testing our previous algorithms, we
 - [SciKit-Learn](https://scikit-learn.org/stable/)
 - [Ray](https://www.ray.io/)
 - [Gym](https://gym.openai.com/)
+
+## Video Summary:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NHJ0bFcvIUI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
