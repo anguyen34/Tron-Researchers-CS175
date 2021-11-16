@@ -20,15 +20,17 @@ To determine the most influential and optimal parameters for an approximator, we
 
 ## Evaluation:
 
-Quantitative: To evaluate the quantitative change in our approximators we will use graph plots and heatmaps. We intend to record data on the cumulative reward per game for the agent with modified parameters and the difference in cumulative reward between the modified agent and the averaged rewards of the three other agents. From this data we will generate plots or heatmaps for each parameter that is being changed. These plots/heatmaps will showcase how rewards and differences in rewards between agents change as parameters are varied. Using these plots we can determine which parameters had the greatest effect as the parameter value was changed and the optimal value for a parameter if it exists. Using the optimal values across multiple parameters we can pick the parameter values to use for an optimal Tron agent.
-The reward plots for the baseline parameter set of the ensemble and random forest model are shown below:
+Quantitative:  
+  To evaluate the quantitative change in our approximators we will use graph plots and heatmaps. We intend to record data on the cumulative reward per game for the agent with modified parameters and the difference in cumulative reward between the modified agent and the averaged rewards of the three other agents. From this data we will generate plots or heatmaps for each parameter that is being changed. These plots/heatmaps will showcase how rewards and differences in rewards between agents change as parameters are varied. Using these plots we can determine which parameters had the greatest effect as the parameter value was changed and the optimal value for a parameter if it exists. Using the optimal values across multiple parameters we can pick the parameter values to use for an optimal Tron agent.
+The reward plots for the baseline parameter set of the ensemble and random forest model are shown below:  
 ![](images/agent_forest_data_baseline.png?raw=true)
 ![](images/agent_forest_data_delta_reward.png?raw=true)
 ![](images/agent_ensemble_data_baseline.png?raw=true)
 ![](images/agent_ensemble_data_delta_reward.png?raw=true)  
 For the baseline plots of observed agent reward vs other agent's average reward, the data is very inconsistent and tends to oscillate around 0 which is the predicted value for this since all agents have the same parameters for these plots and these parameters have not been changed. The plots showing the baseline cumulative reward for the observed agent are a useful visualization of the average performance of the model without changing parameters and leaving only default parameters.
 
-Qualitative: 
+Qualitative:  
+  To evaluate the qualitative performance in our approximators we will observe the gameplay of our agent for which we change parameters in order to see and take notes of any observed performance increases and more intelligent behavior. This type of evaluation can be seen in our video summary which showcases some of the agent's gameplay. This gameplay can be observed for perceived increases in performance and intelligent behavior as a secondaory metric for evaulating our models, in addition to the numbers given from our quantitative analysis.
 
 ## Remaining Goals and Challenges:
 
