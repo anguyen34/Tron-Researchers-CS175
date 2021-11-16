@@ -119,7 +119,7 @@ class MCEnsembleAgent:
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
             self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
@@ -128,8 +128,8 @@ class MCEnsembleAgent:
             plt.plot([i for i in range(0, num_epoch)], player_reward_data)
             plt.xlabel("Iterations (games)")
             plt.ylabel("Reward")
-            plt.title("Ensemble Cumulative Reward Per Game")
-            plt.savefig('docs/images/agent_ensemble_data_baseline.png', bbox_inches='tight')
+            plt.title("Ensemble Changed Agent vs Dummy Agent Cumulative Reward Per Game")
+            plt.savefig('docs/images/agent_ensemble_data_delta_reward.png', bbox_inches='tight')
         return total_rewards
 
     def choose_qvals(self, pno):
