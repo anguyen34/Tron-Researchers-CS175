@@ -29,4 +29,4 @@ The game of Tron as implemented in ColosseumRL is based on the light cycle subga
 ![](images/colrl_tron.png?raw=true)
 
 ## Original Tron Light Cycle Game:
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=XEp8G2HtDJM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XEp8G2HtDJM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
