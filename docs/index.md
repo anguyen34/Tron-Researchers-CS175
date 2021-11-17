@@ -25,6 +25,7 @@ We study the effects of changing various parameters across four different functi
 ## ColosseumRL's Tron:
 
 The game of Tron as implemented in ColosseumRL is based on the light cycle subgame from the original Tron, which itself is derived from Snake games. In the Tron Light Cycle game the goal is to force opposing AI to crash into the wall or into one's own trail, while simultaneously avoiding the enemy's trails.
+
 ![](images/colrl_tron.png?raw=true)
 
 ## Original Tron Light Cycle Game:
