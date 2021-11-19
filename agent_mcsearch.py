@@ -4,6 +4,7 @@
 
 import random
 from copy import deepcopy
+from itertools import combinations_with_replacement
 
 import matplotlib.pyplot as plt
 from time import sleep
@@ -69,7 +70,7 @@ class MCSearchAgent:
         self.data_collect_on = data_collect_on
         player_reward_data = []
         for i in range(num_epoch):
-            self.close()
+            #self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             done = {"__all__": False}
@@ -80,7 +81,7 @@ class MCSearchAgent:
             while not done['__all__']:
                 state, reward, done, results = self.step()
                 cumulative_reward += sum(reward.values())
-                self.render()
+                #self.render()
                 
                 sleep(frame_time)
             # Add player one's cumulative reward's to list
@@ -95,7 +96,7 @@ class MCSearchAgent:
             plt.title("Monte Carlo Cumulative Reward Per Game")
             plt.savefig('docs/images/agent_mcsearch_data_baseline.png', bbox_inches='tight')
         
-        self.render()
+        #self.render()
         return cumulative_reward
 
     def score(self, players, pno, rewards, winners, state):
@@ -118,28 +119,26 @@ class MCSearchAgent:
         return moves
 
     def search(self, state, players, env, pmove, pno, depth):
-        actions = [None] * len(self.players)
-        actions[pno] = pmove
-        p = pno + 1
-        for m1 in self.actions:
-            actions[p % len(self.players)] = m1
-            p += 1
-            for m2 in self.actions:
-                actions[p % len(self.players)] = m2
-                p += 1
-                for m3 in self.actions:
-                    actions[p % len(self.players)] = m3
-                    state_new, players_new, rewards, terminal, winners = env.next_state(state, players, actions)
-                    if depth == self.max_depth:
-                        return self.score(players_new, pno, rewards, winners, state_new)
-                    else:
-                        scores = {'forward': 0, 'left': 0, 'right': 0}
-                        for m in scores:
-                            env_clone = deepcopy(env)
-                            state_clone = deepcopy(state_new)
-                            players_clone = deepcopy(players_new)
-                            scores[m] = self.search(state_clone, players_clone, env_clone, m, pno, depth + 1)
-                        return max(scores.values())
+        if pno not in players:
+            return -50
+
+        action_states = combinations_with_replacement(self.actions, len(players))
+        scores = {'forward': None, 'left': None, 'right': None}
+        plist = list(players)
+        for a in action_states:
+            env_clone = deepcopy(env)
+            state_clone = deepcopy(state)
+            players_clone = deepcopy(players)
+            state_new, players_new, rewards, terminal, winners = env_clone.next_state(state_clone, players_clone, a)
+            if depth == self.max_depth:
+                return self.score(players_new, pno, rewards, winners, state_new)
+            else:
+                new_score = self.search(state_clone, players_clone, env_clone, a[plist.index(pno)], pno, depth + 1)
+                if scores[a[plist.index(pno)]] is None:
+                    scores[a[plist.index(pno)]] = new_score
+                elif new_score > scores[a[plist.index(pno)]]:
+                    scores[a[plist.index(pno)]] = new_score
+        return scores[pmove]
 
     def choose_action(self, pno):
         # select the next action
