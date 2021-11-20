@@ -5,7 +5,6 @@
 import random
 from copy import deepcopy
 
-import matplotlib.pyplot as plt
 from time import sleep
 from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
@@ -15,19 +14,17 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 import numpy as np
 import os
+import graphing
 os.environ['SDL_VIDEODRIVER']='x11'
 
 # Features: Previous move, current board state, actual reward
 # Predict reward based on next move and current board state
-class MCEnsembleAgent:
-    def __init__(self, depth, board_size=15, num_players=4, estimators=50):
+class EnsembleAgent:
+    def __init__(self, board_size=15, num_players=4, estimators=50, loss='linear', kernel='rbf', activation='relu', hidden_layers=(100,), epsilon=0.01):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.num_players = num_players
         self.state = None
         self.players = None
-        self.max_depth = depth
-        self.est = estimators
-        self.test_depth = None
         self.renderer = TronRender(board_size, num_players)
         self.rEnsembles = []
         self.train_states = [[] for _ in range(num_players)]
@@ -37,13 +34,21 @@ class MCEnsembleAgent:
         self.data_collect_on = False
         self.PLAYER_TRAIN_INDEX = 0
         self.normalize_player_train_wins = False
+        self.cumulative_reward_player_train = 0
 
-        self.epsilon = 0.01 # chance of taking a random action instead of the best
+        self.epsilon = epsilon # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
+
+        self.est = estimators
+        self.loss = loss
+        self.kernel = kernel
+        self.act = activation
+        self.layers = hidden_layers
 
     def reset(self):
         self.state, self.players = self.env.new_state()
         self.cumulative_rewards = {}
+        self.cumulative_reward_player_train = 0
         return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
     def step(self):
@@ -93,14 +98,15 @@ class MCEnsembleAgent:
     def close(self):
         self.renderer.close()
         
-    def test(self, num_epoch, frame_time = 0.1, data_collect_on = False):
+    def test(self, num_epoch, param, val, frame_time = 0.1, data_collect_on = False):
         total_rewards = []
         num_players = self.env.num_players
         # init player one's reward list
         self.data_collect_on = data_collect_on
         player_reward_data = []
+        player_delta_data = []
         for i in range(num_epoch):
-            self.close()
+            #self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
@@ -112,24 +118,22 @@ class MCEnsembleAgent:
             
             while not done['__all__']:
                 state, reward, done, results = self.step()
-                cumulative_reward += sum(reward.values())
-                self.render()
+                cumulative_reward += reward.values()[self.PLAYER_TRAIN_INDEX]
+                #self.render()
                 sleep(frame_time)
 
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-            self.render()
+                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
+            #self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         if self.data_collect_on:
-            plt.plot([i for i in range(0, num_epoch)], player_reward_data)
-            plt.xlabel("Iterations (games)")
-            plt.ylabel("Reward")
-            plt.title("Ensemble Changed Agent vs Dummy Agent Cumulative Reward Per Game")
-            plt.savefig('docs/images/agent_ensemble_data_delta_reward.png', bbox_inches='tight')
+            graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered Agent', 'forest_cumulative_{}_{}.png'.format(param, val))
+            graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered Agent vs. Avg of Others', 'forest_delta_{}_{}.png'.format(param, val))
         return total_rewards
 
     def choose_qvals(self, pno):
@@ -169,17 +173,70 @@ class MCEnsembleAgent:
         for i in range(len(self.players)):
             train_states_np = np.array(self.train_states[i])
             train_rewards_np = np.array(self.train_rewards[i])
-            ab = AdaBoostRegressor()
+            ab = AdaBoostRegressor(loss=self.loss, n_estimators=self.est)
             knn = KNeighborsRegressor(n_neighbors=4)
-            mlp = MLPRegressor()
-            svr = SVR()
+            mlp = MLPRegressor(activation=self.act, hidden_layer_sizes=self.layers)
+            svr = SVR(kernel=self.kernel)
             vr = VotingRegressor([('ab', ab), ('knn', knn), ('mlp', mlp), ('svr', svr)])
             vr = vr.fit(train_states_np, train_rewards_np)
             self.rEnsembles.append(vr)
 
 
+
 if __name__ == "__main__":
-    agent = MCEnsembleAgent(depth=50)
-    num_epoch = 200
-    total_reward = agent.test(num_epoch, data_collect_on=True)
-    print("Total Reward: {}".format(total_reward))
+    num_epoch = 100
+    epochs = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+    # AdaBoost Num Estimators
+    data_estimators = []
+    num_estimators = [10, 25, 50, 100, 150, 200]
+    for ne in num_estimators:
+        agent = EnsembleAgent(estimators=ne)
+        rewards = agent.test(num_epoch, 'ada_estimators', ne, data_collect_on=True)
+        data_estimators.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Ensemble Agent AdaBoost Num Estimators (Cumulative Reward)', 'ensemble_heat_ada_estimators.png')
+
+    # AdaBoost Loss Function
+    data_functions = []
+    loss_functions = ['linear', 'square', 'exponential']
+    for lf in num_estimators:
+        agent = EnsembleAgent(loss=lf)
+        rewards = agent.test(num_epoch, 'ada_loss', lf, data_collect_on=True)
+        data_functions.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    graphing.plot_heatmap(loss_functions, epochs, data_functions, 'Loss Function', 'Epoch', 'Ensemble Agent AdaBoost Loss Function (Cumulative Reward)', 'ensemble_heat_ada_lossfunction.png')
+
+    # Support Vector Kernal
+    data_kernel = []
+    kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
+    for kr in kernels:
+        agent = EnsembleAgent(kernel=kr)
+        rewards = agent.test(num_epoch, 'svr_kernel', kr, data_collect_on=True)
+        data_kernel.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    graphing.plot_heatmap(kernels, epochs, data_kernel, 'Kernel', 'Epoch', 'Ensemble Agent Support Vector Regressor Kernal (Cumulative Reward)', 'ensemble_heat_svr_kernal.png')
+
+    # Multilayer Perceptron Activation
+    data_activation = []
+    activations = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
+    for av in activations:
+        agent = EnsembleAgent(activaton=av)
+        rewards = agent.test(num_epoch, 'mlp_activation', av, data_collect_on=True)
+        data_activation.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    graphing.plot_heatmap(activations, epochs, data_activation, 'Activation Function', 'Epoch', 'Ensemble Agent Multi-layer Perceptron Activation Function (Cumulative Reward)', 'ensemble_heat_mlp_activation.png')
+
+    # Multilayer Perceptron Num Hidden Layers
+    data_numlayers = []
+    num_layers = [1, 2, 5, 10, 25, 50, 100, 200]
+    for nl in num_layers:
+        agent = EnsembleAgent(hidden_layers=tuple(100 for i in range(num_layers)))
+        rewards = agent.test(num_epoch, 'mlp_numlayers', nl, data_collect_on=True)
+        data_numlayers.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    graphing.plot_heatmap(num_layers, epochs, data_numlayers, 'Num Hidden Layers', 'Epoch', 'Ensemble Agent Multi-layer Perceptron Num Hidden Layers (Cumulative Reward)', 'ensemble_heat_mlp_numlayers.png')
+
+    # Epsilon
+    data_epsilon = []
+    epsilon = [0.01, 0.05, 0.1, 0.25, 0.5]
+    for ep in epsilon:
+        agent = EnsembleAgent(epsilon=ep)
+        rewards = agent.test(num_epoch, 'Epsilon', ep, data_collect_on=True)
+        data_epsilon.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
+    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Ensemble Agent Epsilon (Cumulative Reward)', 'ensemble_heat_epsilon.png')
