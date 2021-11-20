@@ -5,28 +5,29 @@
 import random
 from copy import deepcopy
 
+import matplotlib.pyplot as plt
 from time import sleep
 from colosseumrl.envs.tron import TronGridEnvironment, TronRender
 from colosseumrl.envs.tron.rllib import TronRaySinglePlayerEnvironment
-from sklearn.ensemble import VotingRegressor, AdaBoostRegressor
-from sklearn.svm import SVR
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 import os
-import graphing
 os.environ['SDL_VIDEODRIVER']='x11'
+import graphing
 
 # Features: Previous move, current board state, actual reward
 # Predict reward based on next move and current board state
-class EnsembleAgent:
-    def __init__(self, board_size=15, num_players=4, estimators=50, loss='linear', kernel='rbf', activation='relu', hidden_layers=(100,), epsilon=0.01):
+class RandomForestAgent:
+    def __init__(self, depth=None, board_size=15, num_players=4, estimators=100, epsilon=0.01, max_leaf=None):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.num_players = num_players
         self.state = None
         self.players = None
+        self.max_depth = depth
+        self.est = estimators
+        self.test_depth = None
         self.renderer = TronRender(board_size, num_players)
-        self.rEnsembles = []
+        self.rforests = []
         self.train_states = [[] for _ in range(num_players)]
         self.train_rewards = [[] for _ in range(num_players)]
         self.cumulative_rewards = {}
@@ -34,16 +35,11 @@ class EnsembleAgent:
         self.data_collect_on = False
         self.PLAYER_TRAIN_INDEX = 0
         self.normalize_player_train_wins = False
+        self.max_leaves = max_leaf
         self.cumulative_reward_player_train = 0
 
         self.epsilon = epsilon # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
-
-        self.est = estimators
-        self.loss = loss
-        self.kernel = kernel
-        self.act = activation
-        self.layers = hidden_layers
 
     def reset(self):
         self.state, self.players = self.env.new_state()
@@ -121,7 +117,6 @@ class EnsembleAgent:
                 cumulative_reward += reward.values()[self.PLAYER_TRAIN_INDEX]
                 #self.render()
                 sleep(frame_time)
-
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
@@ -146,7 +141,7 @@ class EnsembleAgent:
             move_to_do = np.array([act_to_str[m], self.state[1][pno], self.state[2][pno], self.state[3][pno]])
             move_to_do = np.append(move_to_do, b)
             move_to_do = move_to_do.reshape(1, -1)
-            moves[m] = self.rEnsembles[pno].predict(move_to_do)
+            moves[m] = self.rforests[pno].predict(move_to_do)
         return moves
 
     def choose_action(self, pno):
@@ -168,75 +163,51 @@ class EnsembleAgent:
                 return max(qvals, key=qvals.get)
 
     def train(self):
-        # Voting Ensemble containing: SVR SVM, Adaboost, Nearest Neightbors, MLPRegressor (neural network)
-        self.rEnsembles = []
+        self.rforests = []
         for i in range(len(self.players)):
             train_states_np = np.array(self.train_states[i])
             train_rewards_np = np.array(self.train_rewards[i])
-            ab = AdaBoostRegressor(loss=self.loss, n_estimators=self.est)
-            knn = KNeighborsRegressor(n_neighbors=4)
-            mlp = MLPRegressor(activation=self.act, hidden_layer_sizes=self.layers)
-            svr = SVR(kernel=self.kernel)
-            vr = VotingRegressor([('ab', ab), ('knn', knn), ('mlp', mlp), ('svr', svr)])
-            vr = vr.fit(train_states_np, train_rewards_np)
-            self.rEnsembles.append(vr)
-
+            rf = RandomForestRegressor(n_estimators=self.est, max_depth=self.max_depth, max_leaf_nodes=self.max_leaves)
+            rf = rf.fit(train_states_np, train_rewards_np)
+            self.rforests.append(rf)
 
 
 if __name__ == "__main__":
-    num_epoch = 100
-    epochs = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    num_epoch = 200
+    epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
 
-    # AdaBoost Num Estimators
+    # Num Estimators
     data_estimators = []
     num_estimators = [10, 25, 50, 100, 150, 200]
     for ne in num_estimators:
-        agent = EnsembleAgent(estimators=ne)
-        rewards = agent.test(num_epoch, 'ada_estimators', ne, data_collect_on=True)
-        data_estimators.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Ensemble Agent AdaBoost Num Estimators (Cumulative Reward)', 'ensemble_heat_ada_estimators.png')
+        agent = RandomForestAgent(estimators=ne)
+        rewards = agent.test(num_epoch, 'estimators', ne, data_collect_on=True)
+        data_estimators.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
+    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Forest Agent Num Estimators (Cumulative Reward)', 'forest_heat_estimators.png')
 
-    # AdaBoost Loss Function
-    data_functions = []
-    loss_functions = ['linear', 'square', 'exponential']
-    for lf in num_estimators:
-        agent = EnsembleAgent(loss=lf)
-        rewards = agent.test(num_epoch, 'ada_loss', lf, data_collect_on=True)
-        data_functions.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(loss_functions, epochs, data_functions, 'Loss Function', 'Epoch', 'Ensemble Agent AdaBoost Loss Function (Cumulative Reward)', 'ensemble_heat_ada_lossfunction.png')
+    # Max Depth
+    data_depth = []
+    max_depth = [2, 5, 10, 25, 50, 100, 200, None]
+    for md in max_depth:
+        agent = RandomForestAgent(depth=md)
+        rewards = agent.test(num_epoch, 'Max Depth', md, data_collect_on=True)
+        data_depth.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
+    graphing.plot_heatmap(max_depth, epochs, data_depth, 'Max Depth', 'Epoch', 'Forest Agent Max Depth (Cumulative Reward)', 'forest_heat_maxdepth.png')
 
-    # Support Vector Kernal
-    data_kernel = []
-    kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
-    for kr in kernels:
-        agent = EnsembleAgent(kernel=kr)
-        rewards = agent.test(num_epoch, 'svr_kernel', kr, data_collect_on=True)
-        data_kernel.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(kernels, epochs, data_kernel, 'Kernel', 'Epoch', 'Ensemble Agent Support Vector Regressor Kernal (Cumulative Reward)', 'ensemble_heat_svr_kernal.png')
-
-    # Multilayer Perceptron Activation
-    data_activation = []
-    activations = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
-    for av in activations:
-        agent = EnsembleAgent(activaton=av)
-        rewards = agent.test(num_epoch, 'mlp_activation', av, data_collect_on=True)
-        data_activation.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(activations, epochs, data_activation, 'Activation Function', 'Epoch', 'Ensemble Agent Multi-layer Perceptron Activation Function (Cumulative Reward)', 'ensemble_heat_mlp_activation.png')
-
-    # Multilayer Perceptron Num Hidden Layers
-    data_numlayers = []
-    num_layers = [1, 2, 5, 10, 25, 50, 100, 200]
-    for nl in num_layers:
-        agent = EnsembleAgent(hidden_layers=tuple(100 for i in range(num_layers)))
-        rewards = agent.test(num_epoch, 'mlp_numlayers', nl, data_collect_on=True)
-        data_numlayers.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(num_layers, epochs, data_numlayers, 'Num Hidden Layers', 'Epoch', 'Ensemble Agent Multi-layer Perceptron Num Hidden Layers (Cumulative Reward)', 'ensemble_heat_mlp_numlayers.png')
+    # Max Leaf Nodes
+    data_leaves = []
+    leaf_nodes = [3, 10, 25, 50, 100, 200, None]
+    for ln in leaf_nodes:
+        agent = RandomForestAgent(max_leaf=ln)
+        rewards = agent.test(num_epoch, 'Max Leaf Nodes', ln, data_collect_on=True)
+        data_leaves.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
+    graphing.plot_heatmap(leaf_nodes, epochs, data_leaves, 'Max Leaf Nodes', 'Epoch', 'Forest Agent Max Leaf Nodes (Cumulative Reward)', 'forest_heat_leafnodes.png')
 
     # Epsilon
     data_epsilon = []
     epsilon = [0.01, 0.05, 0.1, 0.25, 0.5]
     for ep in epsilon:
-        agent = EnsembleAgent(epsilon=ep)
+        agent = RandomForestAgent(epsilon=ep)
         rewards = agent.test(num_epoch, 'Epsilon', ep, data_collect_on=True)
         data_epsilon.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
-    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Ensemble Agent Epsilon (Cumulative Reward)', 'ensemble_heat_epsilon.png')
+    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Forest Agent Epsilon (Cumulative Reward)', 'forest_heat_epsilon.png')
