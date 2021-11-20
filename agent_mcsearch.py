@@ -122,7 +122,18 @@ class MCSearchAgent:
         if pno not in players:
             return -50
 
-        action_states = combinations_with_replacement(self.actions, len(players))
+        action_combos = combinations_with_replacement(self.actions, len(players) - 1)
+        action_states = []
+        for i in action_combos:
+            c = 0
+            astate = []
+            for p in players:
+                if p == pno:
+                    astate.append(pmove)
+                else:
+                    astate.append(i[c])
+                    c += 1
+            action_states.append(astate)
         scores = {'forward': None, 'left': None, 'right': None}
         plist = list(players)
         for a in action_states:
@@ -148,6 +159,7 @@ class MCSearchAgent:
             return self.actions[act_no]
         else:
             qvals = self.choose_qvals(pno)
+            print(qvals)
             return max(qvals, key=qvals.get)
 
 if __name__ == "__main__":
