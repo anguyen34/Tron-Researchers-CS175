@@ -102,7 +102,7 @@ class RandomForestAgent:
         player_reward_data = []
         player_delta_data = []
         for i in range(num_epoch):
-            #self.close()
+            self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
@@ -114,15 +114,15 @@ class RandomForestAgent:
             
             while not done['__all__']:
                 state, reward, done, results = self.step()
-                cumulative_reward += reward.values()[self.PLAYER_TRAIN_INDEX]
-                #self.render()
+                cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
+                self.render()
                 sleep(frame_time)
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-            #self.render()
+            self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
@@ -172,6 +172,7 @@ class RandomForestAgent:
             self.rforests.append(rf)
 
 
+
 if __name__ == "__main__":
     num_epoch = 200
     epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
@@ -183,7 +184,7 @@ if __name__ == "__main__":
         agent = RandomForestAgent(estimators=ne)
         rewards = agent.test(num_epoch, 'estimators', ne, data_collect_on=True)
         data_estimators.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
-    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Forest Agent Num Estimators (Cumulative Reward)', 'forest_heat_estimators.png')
+    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Forest Agent Num Estimators', 'forest_heat_estimators.png')
 
     # Max Depth
     data_depth = []
@@ -192,7 +193,7 @@ if __name__ == "__main__":
         agent = RandomForestAgent(depth=md)
         rewards = agent.test(num_epoch, 'Max Depth', md, data_collect_on=True)
         data_depth.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
-    graphing.plot_heatmap(max_depth, epochs, data_depth, 'Max Depth', 'Epoch', 'Forest Agent Max Depth (Cumulative Reward)', 'forest_heat_maxdepth.png')
+    graphing.plot_heatmap(max_depth, epochs, data_depth, 'Max Depth', 'Epoch', 'Forest Agent Max Depth', 'forest_heat_maxdepth.png')
 
     # Max Leaf Nodes
     data_leaves = []
@@ -201,7 +202,7 @@ if __name__ == "__main__":
         agent = RandomForestAgent(max_leaf=ln)
         rewards = agent.test(num_epoch, 'Max Leaf Nodes', ln, data_collect_on=True)
         data_leaves.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
-    graphing.plot_heatmap(leaf_nodes, epochs, data_leaves, 'Max Leaf Nodes', 'Epoch', 'Forest Agent Max Leaf Nodes (Cumulative Reward)', 'forest_heat_leafnodes.png')
+    graphing.plot_heatmap(leaf_nodes, epochs, data_leaves, 'Max Leaf Nodes', 'Epoch', 'Forest Agent Max Leaf Nodes', 'forest_heat_leafnodes.png')
 
     # Epsilon
     data_epsilon = []
@@ -210,4 +211,4 @@ if __name__ == "__main__":
         agent = RandomForestAgent(epsilon=ep)
         rewards = agent.test(num_epoch, 'Epsilon', ep, data_collect_on=True)
         data_epsilon.append([rewards[19], rewards[39], rewards[59], rewards[79], rewards[99], rewards[119], rewards[139], rewards[159], rewards[179], rewards[199]])
-    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Forest Agent Epsilon (Cumulative Reward)', 'forest_heat_epsilon.png')
+    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Forest Agent Epsilon', 'forest_heat_epsilon.png')
