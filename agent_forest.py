@@ -120,7 +120,7 @@ class RandomForestAgent:
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
             #self.render()
             total_rewards.append(cumulative_reward)
