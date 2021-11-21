@@ -127,8 +127,8 @@ class RandomForestAgent:
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         if self.data_collect_on:
-            graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered Agent', 'forest_cumulative_{}_{}.png'.format(param, val))
-            graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered Agent vs. Avg of Others', 'forest_delta_{}_{}.png'.format(param, val))
+            graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered Forest Agent', 'forest_cumulative_{}_{}.png'.format(param, val))
+            graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered Forest Agent vs. Avg of Others', 'forest_delta_{}_{}.png'.format(param, val))
         return total_rewards
 
     def choose_qvals(self, pno):

@@ -102,8 +102,8 @@ class MCSearchAgent:
             total_rewards.append(cumulative_reward)
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         if self.data_collect_on:
-            graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered Agent', 'mcsearch_cumulative_{}_{}.png'.format(param, val))
-            graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered Agent vs. Avg of Others', 'mcsearch_delta_{}_{}.png'.format(param, val))
+            graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered MCSearch Agent', 'mcsearch_cumulative_{}_{}.png'.format(param, val))
+            graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered MCSearch Agent vs. Avg of Others', 'mcsearch_delta_{}_{}.png'.format(param, val))
         
         self.render()
         return total_rewards
