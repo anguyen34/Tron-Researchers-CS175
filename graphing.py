@@ -12,6 +12,7 @@ def plot_graph(num_epoch, data, x, y, title, path):
     plt.savefig(path, bbox_inches='tight')
 
 def plot_heatmap(params, epochs, data, x, y, title, path):
+    data = transpose(data, [])
     f, ax = plt.subplots(1, 1)
     cax = ax.matshow(data, interpolation='nearest')
     f.colorbar(cax).set_label('Cumulative Reward')
@@ -21,3 +22,15 @@ def plot_heatmap(params, epochs, data, x, y, title, path):
     plt.ylabel(y)
     plt.title(title)
     plt.savefig(path, bbox_inches='tight')
+
+def transpose(l1, l2): 
+    # iterate over list l1 to the length of an item
+    for i in range(len(l1[0])):
+        # print(i)
+        row =[]
+        for item in l1:
+            # appending to new list with values and index positions
+            # i contains index position and item contains values
+            row.append(item[i])
+        l2.append(row)
+    return l2
