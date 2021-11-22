@@ -16,7 +16,7 @@ import graphing
 
 
 class MCSearchAgent:
-    def __init__(self, depth=2, epsilon=0.01, board_size=15, num_players=4):
+    def __init__(self, depth=2, epsilon=0.01, board_size=15, num_players=4, w=50, d=-50):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.state = None
         self.players = None
@@ -31,6 +31,8 @@ class MCSearchAgent:
 
         self.epsilon = epsilon # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
+        self.WON = w
+        self.DIED = d
 
     def reset(self):
         self.state, self.players = self.env.new_state()
@@ -90,9 +92,8 @@ class MCSearchAgent:
             
             while not done['__all__']:
                 state, reward, done, results = self.step()
-                cumulative_reward += reward.values()[self.PLAYER_TRAIN_INDEX]
+                cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
                 self.render()
-                
                 sleep(frame_time)
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
@@ -109,12 +110,10 @@ class MCSearchAgent:
         return total_rewards
 
     def score(self, players, pno, rewards, winners, state):
-        DIED = -50
-        WON = 50
         if pno not in players:
-            return DIED
+            return self.DIED
         if winners is not None and pno in winners:
-            return WON
+            return self.WON
         board = state[0].flatten()
         return rewards[pno] * len([i for i in board if i == pno])
 
@@ -129,7 +128,7 @@ class MCSearchAgent:
 
     def search(self, state, players, env, pmove, pno, depth):
         if pno not in players:
-            return -50
+            return self.DIED
 
         action_combos = combinations_with_replacement(self.actions, len(players) - 1)
         action_states = []
@@ -150,7 +149,9 @@ class MCSearchAgent:
             state_clone = deepcopy(state)
             players_clone = deepcopy(players)
             state_new, players_new, rewards, terminal, winners = env_clone.next_state(state_clone, players_clone, a)
-            if depth == self.max_depth:
+            if pno == self.PLAYER_TRAIN_INDEX and depth == self.test_depth:
+                return self.score(players_new, pno, rewards, winners, state_new)
+            elif pno != self.PLAYER_TRAIN_INDEX and depth == self.max_depth:
                 return self.score(players_new, pno, rewards, winners, state_new)
             else:
                 new_score = self.search(state_clone, players_clone, env_clone, a[plist.index(pno)], pno, depth + 1)
@@ -168,15 +169,16 @@ class MCSearchAgent:
             return self.actions[act_no]
         else:
             qvals = self.choose_qvals(pno)
-            print(qvals)
             return max(qvals, key=qvals.get)
+
+
 
 if __name__ == "__main__":
     num_epoch = 20
 
     # Max depth
     data_depth = []
-    for d in [1, 2, 3, 4]:
+    for d in [1, 2, 3, 4, 5]:
         agent = MCSearchAgent(depth=d)
         rewards = agent.test(num_epoch, 'depth', d, data_collect_on=True)
         data_depth.append(rewards)
