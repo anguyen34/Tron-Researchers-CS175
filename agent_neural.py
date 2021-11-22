@@ -105,41 +105,44 @@ class TronRayEnvironment(MultiAgentEnv):
         return None
         self.renderer.close()
         
-    def test(self, trainer, param, val, data_collect_on=False, frame_time = 0.1):
+    def test(self, num_epochs, trainer, param, val, data_collect_on=False, frame_time = 0.1):
         total_rewards = []
         player_reward_data = []
         player_delta_data = []
         self.data_collect_on = data_collect_on
-        trainer.train()
-        num_players = self.env.num_players
-        self.close()
-        state = self.reset()
-        done = {"__all__": False}
-        action = {str(i): None for i in range(num_players)}
-        reward = {str(i): None for i in range(num_players)}
-        cumulative_reward = 0
-        
-        while not done['__all__']:
-            action = {i: trainer.compute_action(state[i], prev_action=action[i], prev_reward=reward[i], policy_id=i) for
-                      i in map(str, range(num_players))}
+        for i in range(num_epochs):
+            trainer.train()
+            num_players = self.env.num_players
+            self.close()
+            state = self.reset()
+            done = {"__all__": False}
+            action = {str(i): None for i in range(num_players)}
+            reward = {str(i): None for i in range(num_players)}
+            cumulative_reward = 0
             
-            state, reward, done, results = self.step(action)
-            cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
-            self.render()
-            
-            sleep(frame_time)
-        # Add player one's cumulative reward's to list
-        if self.data_collect_on:
-            PLAYER_WIN_AMOUNT = 9
-            player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
-            player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-        total_rewards.append(cumulative_reward)
+            while not done['__all__']:
+                action = {i: trainer.compute_action(state[i], prev_action=action[i], prev_reward=reward[i], policy_id=i) for
+                        i in map(str, range(num_players))}
+                
+                state, reward, done, results = self.step(action)
+                cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
+                self.render()
+                
+                sleep(frame_time)
+            # Add player one's cumulative reward's to list
+            if self.data_collect_on:
+                PLAYER_WIN_AMOUNT = 9
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
+
+            total_rewards.append(cumulative_reward)
         
         self.render()
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         if self.data_collect_on:
             graphing.plot_graph(num_epoch, player_reward_data, 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Altered Agent', 'neural_cumulative_{}_{}.png'.format(param, val))
             graphing.plot_graph(num_epoch, player_delta_data, 'Iterations (Num Games/Epochs)', 'Delta Reward', 'Difference in Rewards of Altered Agent vs. Avg of Others', 'neural_delta_{}_{}.png'.format(param, val))
+        ray.shutdown()
         return total_rewards
 
 # Some preprocessing to let the networks learn faster
@@ -227,49 +230,48 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.01):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-num_epoch = 5
-#epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
-epochs = [0, 1, 2, 3, 4]
+num_epoch = 100
+epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
 
 # Hidden layers
 data_hidden = []
-num_hidden = [1, 2, 5, 10, 25, 50, 64, 100]
+num_hidden = [1, 2, 5, 10, 20]
 for nh in num_hidden:
     trainer, env = start_session(num_hidden=nh)
-    rewards = env.test(trainer, 'Hidden Layers', nh, data_collect_on=True)
+    rewards = env.test(num_epoch, trainer, 'Hidden Layers', nh, data_collect_on=True)
     #data_hidden.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
     data_hidden.append(rewards)
-    graphing.plot_heatmap(num_hidden, epochs, data_hidden, 'Num Hidden Layers', 'Epoch', 'Neural Agent Num Hidden Layers (Cumulative Reward)', 'neural_heat_hidden_layers.png')
+graphing.plot_heatmap(num_hidden, epochs, data_hidden, 'Num Hidden Layers', 'Epoch', 'Neural Agent Num Hidden Layers (Cumulative Reward)', 'neural_heat_hidden_layers.png')
 
 # Number of nodes
 data_nodes = []
 num_nodes = [1, 2, 5, 10, 25, 50, 64]
 for nn in num_nodes:
     trainer, env = start_session(num_nodes=nn)
-    rewards = env.test(trainer, 'Nodes Per Layer', nn, data_collect_on=True)
+    rewards = env.test(num_epoch, trainer, 'Nodes Per Layer', nn, data_collect_on=True)
     #data_nodes.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
     data_nodes.append(rewards)
-    graphing.plot_heatmap(num_nodes, epochs, data_nodes, 'Num Nodes Per Layer', 'Epoch', 'Neural Agent Num Nodes Per Layer (Cumulative Reward)', 'neural_heat_nodes.png')
+graphing.plot_heatmap(num_nodes, epochs, data_nodes, 'Num Nodes Per Layer', 'Epoch', 'Neural Agent Num Nodes Per Layer (Cumulative Reward)', 'neural_heat_nodes.png')
 
 # Activation Functions - default is relu
 data_act = []
 acts = ["tanh", "relu", "swish"]
 for na in acts:
     trainer, env = start_session(act=na)
-    rewards = env.test(trainer, 'Activation Function', na, data_collect_on=True)
+    rewards = env.test(num_epoch, trainer, 'Activation Function', na, data_collect_on=True)
     #data_act.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
     data_act.append(rewards)
-    graphing.plot_heatmap(acts, epochs, data_act, 'Activation Function', 'Epoch', 'Neural Agent Activation Function (Cumulative Reward)', 'neural_heat_activation.png')
+graphing.plot_heatmap(acts, epochs, data_act, 'Activation Function', 'Epoch', 'Neural Agent Activation Function (Cumulative Reward)', 'neural_heat_activation.png')
 
 # Epsilon
 data_epsilon = []
 epsilon = [0.01, 0.05, 0.1, 0.25, 0.5]
 for ne in num_nodes:
-    trainer, env = start_session(epslion=ne)
-    rewards = env.test(trainer, 'Epsilon', nn, data_collect_on=True)
+    trainer, env = start_session(epsilon=ne)
+    rewards = env.test(num_epoch, trainer, 'Epsilon', nn, data_collect_on=True)
     #data_epsilon.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
     data_epsilon.append(rewards)
-    graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Neural Agent Epsilon (Cumulative Reward)', 'neural_heat_epsilon.png')
+graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Neural Agent Epsilon (Cumulative Reward)', 'neural_heat_epsilon.png')
 
 # for epoch in range(num_epoch):
 #     print("Training iteration: {}".format(epoch), end='')

@@ -102,7 +102,7 @@ class RandomForestAgent:
         player_reward_data = []
         player_delta_data = []
         for i in range(num_epoch):
-            self.close()
+            #self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
@@ -115,14 +115,14 @@ class RandomForestAgent:
             while not done['__all__']:
                 state, reward, done, results = self.step()
                 cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
-                self.render()
+                #self.render()
                 sleep(frame_time)
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
                 player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-            self.render()
+            #self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
