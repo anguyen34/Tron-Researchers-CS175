@@ -233,7 +233,7 @@ epochs = [0, 1, 2, 3, 4]
 
 # Hidden layers
 data_hidden = []
-num_hidden = [1, 2]
+num_hidden = [1, 2, 5, 10, 25, 50, 64, 100]
 for nh in num_hidden:
     trainer, env = start_session(num_hidden=nh)
     rewards = env.test(trainer, 'Hidden Layers', nh, data_collect_on=True)
@@ -243,7 +243,7 @@ for nh in num_hidden:
 
 # Number of nodes
 data_nodes = []
-num_nodes = [50, 64]
+num_nodes = [1, 2, 5, 10, 25, 50, 64]
 for nn in num_nodes:
     trainer, env = start_session(num_nodes=nn)
     rewards = env.test(trainer, 'Nodes Per Layer', nn, data_collect_on=True)
@@ -253,7 +253,7 @@ for nn in num_nodes:
 
 # Activation Functions - default is relu
 data_act = []
-acts = ['identity', 'logistic']
+acts = ["tanh", "relu", "swish"]
 for na in acts:
     trainer, env = start_session(act=na)
     rewards = env.test(trainer, 'Activation Function', na, data_collect_on=True)
@@ -263,7 +263,7 @@ for na in acts:
 
 # Epsilon
 data_epsilon = []
-epsilon = [0.01, 0.05]
+epsilon = [0.01, 0.05, 0.1, 0.25, 0.5]
 for ne in num_nodes:
     trainer, env = start_session(epslion=ne)
     rewards = env.test(trainer, 'Epsilon', nn, data_collect_on=True)
