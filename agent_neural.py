@@ -24,10 +24,11 @@ from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.models.preprocessors import Preprocessor
 from ray.rllib.models import ModelCatalog
 import os
-os.environ['SDL_VIDEODRIVER']='x11'
+#os.environ['SDL_VIDEODRIVER']='x11'
 
 SEED = 12345
 np.random.seed(SEED)
+env_gbl = None
 
 # A full free-for-all version of tron
 class TronRayEnvironment(MultiAgentEnv):
@@ -70,7 +71,7 @@ class TronRayEnvironment(MultiAgentEnv):
             action = action_dict.get(str(player), 0)
             rnd = random.random()
             if rnd < self.epsilon:
-                action = random.random(0, len(action_to_string))
+                action = random.randint(0, len(action_to_string) - 1)
             actions.append(action_to_string[action])
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
@@ -94,12 +95,14 @@ class TronRayEnvironment(MultiAgentEnv):
         return observations, rewards, dones, {}
 
     def render(self, mode='human'):
+        return None
         if self.state is None:
             return None
 
         return self.renderer.render(self.state, mode)
 
     def close(self):
+        return None
         self.renderer.close()
         
     def test(self, trainer, param, val, data_collect_on=False, frame_time = 0.1):
@@ -121,7 +124,7 @@ class TronRayEnvironment(MultiAgentEnv):
                       i in map(str, range(num_players))}
             
             state, reward, done, results = self.step(action)
-            cumulative_reward += reward.values()[self.PLAYER_TRAIN_INDEX]
+            cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
             self.render()
             
             sleep(frame_time)
@@ -142,7 +145,7 @@ class TronRayEnvironment(MultiAgentEnv):
 # Some preprocessing to let the networks learn faster
 class TronExtractBoard(Preprocessor):
     def _init_shape(self, obs_space, options):
-        board_size = env.observation_space['board'].shape[0]
+        board_size = env_gbl.observation_space['board'].shape[0]
         return (board_size + 4, board_size + 4, 2)
     
     def transform(self, observation):
@@ -176,10 +179,12 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.01):
     ray.init()
 
     def environment_creater(params=None):
-        return TronRayEnvironment(board_size=13, num_players=4, epsilon=epsilon)
+        return TronRayEnvironment(board_size=15, num_players=4, epsilon=epsilon)
 
     env = environment_creater()
     tune.register_env("tron_multi_player", environment_creater)
+    global env_gbl
+    env_gbl = env
     ModelCatalog.register_custom_preprocessor("tron_prep", TronExtractBoard)
 
     # Configure Deep Q Learning for multi-agent training
@@ -222,43 +227,48 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.01):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-num_epoch = 100
-epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
+num_epoch = 5
+#epochs = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
+epochs = [0, 1, 2, 3, 4]
 
 # Hidden layers
 data_hidden = []
-num_hidden = [1, 2, 5, 10, 25, 50, 64, 100]
+num_hidden = [1, 2]
 for nh in num_hidden:
     trainer, env = start_session(num_hidden=nh)
     rewards = env.test(trainer, 'Hidden Layers', nh, data_collect_on=True)
-    data_hidden.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    #data_hidden.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    data_hidden.append(rewards)
     graphing.plot_heatmap(num_hidden, epochs, data_hidden, 'Num Hidden Layers', 'Epoch', 'Neural Agent Num Hidden Layers (Cumulative Reward)', 'neural_heat_hidden_layers.png')
 
 # Number of nodes
 data_nodes = []
-num_nodes = [1, 2, 5, 10, 25, 50, 64]
+num_nodes = [50, 64]
 for nn in num_nodes:
     trainer, env = start_session(num_nodes=nn)
     rewards = env.test(trainer, 'Nodes Per Layer', nn, data_collect_on=True)
-    data_nodes.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    #data_nodes.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    data_nodes.append(rewards)
     graphing.plot_heatmap(num_nodes, epochs, data_nodes, 'Num Nodes Per Layer', 'Epoch', 'Neural Agent Num Nodes Per Layer (Cumulative Reward)', 'neural_heat_nodes.png')
 
 # Activation Functions - default is relu
 data_act = []
-acts = ['identity', 'logistic', 'tanh', 'relu']
+acts = ['identity', 'logistic']
 for na in acts:
     trainer, env = start_session(act=na)
     rewards = env.test(trainer, 'Activation Function', na, data_collect_on=True)
-    data_act.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    #data_act.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    data_act.append(rewards)
     graphing.plot_heatmap(acts, epochs, data_act, 'Activation Function', 'Epoch', 'Neural Agent Activation Function (Cumulative Reward)', 'neural_heat_activation.png')
 
 # Epsilon
 data_epsilon = []
-epsilon = [0.01, 0.05, 0.1, 0.25, 0.5]
+epsilon = [0.01, 0.05]
 for ne in num_nodes:
     trainer, env = start_session(epslion=ne)
     rewards = env.test(trainer, 'Epsilon', nn, data_collect_on=True)
-    data_epsilon.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    #data_epsilon.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    data_epsilon.append(rewards)
     graphing.plot_heatmap(epsilon, epochs, data_epsilon, 'Epsilon', 'Epoch', 'Neural Agent Epsilon (Cumulative Reward)', 'neural_heat_epsilon.png')
 
 # for epoch in range(num_epoch):
