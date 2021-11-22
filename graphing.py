@@ -4,12 +4,15 @@
 
 import matplotlib.pyplot as plt
 
+DIR_PATH = "docs/images/"
+
 def plot_graph(num_epoch, data, x, y, title, path):
-    plt.plot([i for i in range(0, num_epoch)], data)
+    f, ax = plt.subplots(1, 1)
+    ax.plot([i for i in range(0, num_epoch)], data)
     plt.xlabel(x)
     plt.ylabel(y)
     plt.title(title)
-    plt.savefig(path, bbox_inches='tight')
+    plt.savefig(DIR_PATH + path, bbox_inches='tight')
 
 def plot_heatmap(params, epochs, data, x, y, title, path):
     data = transpose(data, [])
@@ -21,7 +24,7 @@ def plot_heatmap(params, epochs, data, x, y, title, path):
     plt.xlabel(x)
     plt.ylabel(y)
     plt.title(title)
-    plt.savefig(path, bbox_inches='tight')
+    plt.savefig(DIR_PATH + path, bbox_inches='tight')
 
 def transpose(l1, l2): 
     # iterate over list l1 to the length of an item
