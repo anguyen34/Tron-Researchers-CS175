@@ -68,9 +68,11 @@ class RandomForestAgent:
 
         # Saving additional data for games.
         b = self.state[0].flatten()
+        board = np.pad(b, 2, 'constant', constant_values=-1)
         for r in range(len(old_players)):
-            act_to_str_np = np.array([act_to_str[actions[r]], self.state[1][old_players[r]], self.state[2][old_players[r]], self.state[3][old_players[r]]])
-            act_to_str_np = np.append(act_to_str_np, b)
+            board[board != old_players[r]] = -1
+            act_to_str_np = np.array([act_to_str[actions[r]], self.state[1][old_players[r]], self.state[2][old_players[r]], self.state[3][old_players[r]]] + self.state[1] + self.state[2] + self.state[3])
+            act_to_str_np = np.append(act_to_str_np, board)
 
 
             self.train_states[old_players[r]].append(act_to_str_np)
@@ -102,7 +104,7 @@ class RandomForestAgent:
         player_reward_data = []
         player_delta_data = []
         for i in range(num_epoch):
-            #self.close()
+            self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
@@ -115,14 +117,14 @@ class RandomForestAgent:
             while not done['__all__']:
                 state, reward, done, results = self.step()
                 cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
-                #self.render()
+                self.render()
                 sleep(frame_time)
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
                 player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-            #self.render()
+            self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
@@ -136,10 +138,12 @@ class RandomForestAgent:
         act_to_str = {'forward': 0, 'left': 1, 'right': 2}
         #Flatten board
         b = self.state[0].flatten()
+        board = np.pad(b, 2, 'constant', constant_values=-1)
+        board[board != pno] = -1
         for m in moves:
             # First 3 features to do are planned move, head, direction
-            move_to_do = np.array([act_to_str[m], self.state[1][pno], self.state[2][pno], self.state[3][pno]])
-            move_to_do = np.append(move_to_do, b)
+            move_to_do = np.array([act_to_str[m], self.state[1][pno], self.state[2][pno], self.state[3][pno]] + self.state[1] + self.state[2] + self.state[3])
+            move_to_do = np.append(move_to_do, board)
             move_to_do = move_to_do.reshape(1, -1)
             moves[m] = self.rforests[pno].predict(move_to_do)
         return moves
