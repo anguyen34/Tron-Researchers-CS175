@@ -67,10 +67,17 @@ class RandomForestAgent:
             self.cumulative_rewards[player] += rewards[player]
 
         # Saving additional data for games.
-        b = self.state[0].flatten()
-        board = np.pad(b, 2, 'constant', constant_values=-1)
         for r in range(len(old_players)):
-            board[board != old_players[r] + 1 and board != 0] = -1
+            b = np.zeros((len(self.state[0]), len(self.state[0][0]),))
+            for i in range(len(self.state[0])):
+                for j in range(len(self.state[0][0])):
+                    if self.state[0][i][j] == 0:
+                        b[i][j] = 0
+                    elif self.state[0][i][j] != old_players[r] + 1:
+                        b[i][j] = -1
+                    else:
+                        b[i][j] = self.state[0][i][j]
+            board = np.pad(b, 2, 'constant', constant_values=-1).flatten()
             act_to_str_np = np.array([act_to_str[actions[r]], self.state[1][old_players[r]], self.state[2][old_players[r]], self.state[3][old_players[r]]] + self.state[1] + self.state[2] + self.state[3])
             act_to_str_np = np.append(act_to_str_np, board)
             self.train_states[old_players[r]].append(act_to_str_np)
@@ -135,9 +142,16 @@ class RandomForestAgent:
         moves = {'forward': 0, 'left': 0, 'right': 0}
         act_to_str = {'forward': 0, 'left': 1, 'right': 2}
         #Flatten board
-        b = self.state[0].flatten()
-        board = np.pad(b, 2, 'constant', constant_values=-1)
-        board[board != pno + 1 and board != 0] = -1
+        b = np.zeros((len(self.state[0]), len(self.state[0][0]),))
+        for i in range(len(self.state[0])):
+            for j in range(len(self.state[0][0])):
+                if self.state[0][i][j] == 0:
+                    b[i][j] = 0
+                elif self.state[0][i][j] != pno + 1:
+                    b[i][j] = -1
+                else:
+                    b[i][j] = self.state[0][i][j]
+        board = np.pad(b, 2, 'constant', constant_values=-1).flatten()
         for m in moves:
             # First 3 features to do are planned move, head, direction
             move_to_do = np.array([act_to_str[m], self.state[1][pno], self.state[2][pno], self.state[3][pno]] + self.state[1] + self.state[2] + self.state[3])
