@@ -4,6 +4,7 @@
 
 import numpy as np
 import random
+import graphing
 from copy import deepcopy
 from itertools import combinations_with_replacement
 
@@ -19,9 +20,12 @@ import ray
 from ray import tune
 from ray.rllib.agents.ppo import PPOTrainer, DEFAULT_CONFIG
 from ray.rllib.agents.dqn import DQNTrainer, DEFAULT_CONFIG
+from ray.rllib.env.multi_agent_env import MultiAgentEnv
+
 
 from ray.rllib.models.preprocessors import Preprocessor
 from ray.rllib.models import ModelCatalog
+import os
 
 from sklearn.ensemble import VotingRegressor, AdaBoostRegressor, RandomForestRegressor
 from sklearn.svm import SVR
@@ -30,6 +34,7 @@ from sklearn.neural_network import MLPRegressor
 
 SEED = 12345
 np.random.seed(SEED)
+env_gbl = None
 
 
 
@@ -41,6 +46,7 @@ class MCSearchAgentMA:
         self.actions = ["forward", "left", "right"]
         self.WON = w
         self.DIED = d
+        self.PLAYER_TRAIN_INDEX = 1
 
     def score(self, players, pno, rewards, winners, state):
         if pno not in players:
@@ -127,7 +133,7 @@ class RandomForestAgentMA:
         self.cumulative_reward = 0
         self.gno = 0
 
-    def save_data(self, pno, reward, state):
+    def save_data(self, pno, reward, state, move):
         act_to_str = {'forward': 0, 'left': 1, 'right': 2}
         self.cumulative_reward += reward
 
@@ -142,7 +148,7 @@ class RandomForestAgentMA:
                     b[i][j] = state[0][i][j]
         board = np.pad(b, 2, 'constant', constant_values=-1).flatten()
 
-        act_to_str_np = np.array([act_to_str[pno], state[1][pno], state[2][pno], state[3][pno]] + state[1] + state[2] + state[3])
+        act_to_str_np = np.array([act_to_str[move], state[1][pno], state[2][pno], state[3][pno]] + state[1] + state[2] + state[3])
         act_to_str_np = np.append(act_to_str_np, board)
         self.train_states.append(act_to_str_np)
         self.train_rewards.append(self.cumulative_reward)
@@ -218,7 +224,7 @@ class EnsembleForestAgentMA:
         self.cumulative_reward = 0
         self.gno = 0
 
-    def save_data(self, pno, reward, state):
+    def save_data(self, pno, reward, state, move):
         act_to_str = {'forward': 0, 'left': 1, 'right': 2}
         self.cumulative_reward += reward
 
@@ -233,7 +239,7 @@ class EnsembleForestAgentMA:
                     b[i][j] = state[0][i][j]
         board = np.pad(b, 2, 'constant', constant_values=-1).flatten()
 
-        act_to_str_np = np.array([act_to_str[pno], state[1][pno], state[2][pno], state[3][pno]] + state[1] + state[2] + state[3])
+        act_to_str_np = np.array([act_to_str[move], state[1][pno], state[2][pno], state[3][pno]] + state[1] + state[2] + state[3])
         act_to_str_np = np.append(act_to_str_np, board)
         self.train_states.append(act_to_str_np)
         self.train_rewards.append(self.cumulative_reward)
@@ -292,18 +298,22 @@ class EnsembleForestAgentMA:
 
 
 
-# A version of tron where only one agent may learn and the others are fixed
-class TronRayMultipleAgents(gym.Env):
-    def __init__(self, board_size=15, num_players=4, spawn_offset=2):
+# A full free-for-all version of tron
+class TronRayEnvironment(MultiAgentEnv):
+    action_space = Discrete(3)
+
+    def __init__(self, board_size=15, num_players=4, epsilon=0.01):
         self.env = TronGridEnvironment.create(board_size=board_size, num_players=num_players)
         self.state = None
         self.players = None
-        self.human_player = None
-        self.spawn_offset = spawn_offset
+        self.epsilon = epsilon
+        self.PLAYER_TRAIN_INDEX = 0
+        self.data_collect_on = False
+        self.normalize_player_train_wins = False
+        self.cumulative_rewards = {}
 
-        self.renderer = TronRender(board_size, num_players, winner_player=0)
-        
-        self.action_space = Discrete(3)
+        self.renderer = TronRender(board_size, num_players)
+
         self.observation_space = Dict({
             'board': Box(0, num_players, shape=(board_size, board_size)),
             'heads': Box(0, np.infty, shape=(num_players,)),
@@ -315,18 +325,13 @@ class TronRayMultipleAgents(gym.Env):
         self.vragent = EnsembleForestAgentMA(estimators=50, loss='linear', kernel='rbf', activation='relu', hidden_layers=(100,), epsilon=0.01)
 
     def reset(self):
-        self.state, self.players = self.env.new_state(spawn_offset=self.spawn_offset)
-        self.human_player = 0
+        self.state, self.players = self.env.new_state()
+        self.cumulative_rewards = {}
         self.rfagent.reset()
         self.vragent.reset()
-        return self._get_observation(self.human_player)
+        return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
-    def _get_observation(self, player):
-        return self.env.state_to_observation(self.state, player)
-
-    def step(self, action: int):
-        human_player = self.human_player
-
+    def step(self, action_dict):
         action_to_string = {
             0: 'forward',
             1: 'right',
@@ -334,65 +339,107 @@ class TronRayMultipleAgents(gym.Env):
         }
 
         actions = []
+        m2 = None
+        m3 = None
+
         for player in self.players:
-            if player == human_player:
+            if player == 0:
+                action = action_dict.get(str(player), 0)
+                rnd = random.random()
+                if rnd < self.epsilon:
+                    action = random.randint(0, len(action_to_string) - 1)
                 actions.append(action_to_string[action])
             elif player == 1:
                 actions.append(self.mcagent.choose_action(player, self.env, self.state, self.players))
             elif player == 2:
                 actions.append(self.rfagent.choose_action(player, self.state))
+                m2 = actions[-1]
             elif player == 3:
                 actions.append(self.vragent.choose_action(player, self.state))
+                m3 = actions[-1]
 
         self.state, self.players, rewards, terminal, winners = self.env.next_state(self.state, self.players, actions)
-
         if 2 in self.players:
-            self.rfagent.save_data(2, rewards[2], self.state)
+            self.rfagent.save_data(2, rewards[2], self.state, m2)
         if 3 in self.players:
-            self.rfagent.save_data(3, rewards[3], self.state)
-        observation = self._get_observation(human_player)
-        reward = rewards[human_player]
-        done = terminal
-        return observation, reward, done, {}
+            self.vragent.save_data(3, rewards[3], self.state, m3)
+        if winners is not None and self.PLAYER_TRAIN_INDEX in winners:
+            self.normalize_player_train_wins = True
+        else:
+            self.normalize_player_train_wins = False
+        for player in self.players:
+            if player not in self.cumulative_rewards:
+                self.cumulative_rewards[player] = 0
+            self.cumulative_rewards[player] += rewards[player]
+
+        num_players = self.env.num_players
+        alive_players = set(self.players)
+
+        observations = {str(i): self.env.state_to_observation(self.state, i) for i in map(int, action_dict.keys())}
+        rewards = {str(i): rewards[i] for i in map(int, action_dict.keys())}
+        dones = {str(i): i not in alive_players for i in map(int, action_dict.keys())}
+        dones['__all__'] = terminal
+
+        return observations, rewards, dones, {}
 
     def render(self, mode='human'):
+        return None
         if self.state is None:
             return None
+
         return self.renderer.render(self.state, mode)
 
     def close(self):
+        return None
         self.renderer.close()
         
-    def test(self, trainer, frame_time = 0.1, epochs = 100):
-        self.close()
-        state = self.reset()
-        done = False
-        action = None
-        reward = None
-        cumulative_reward = 0
-        for i in range(epochs):
+    def test(self, num_epochs, trainer, param=None, val=None, data_collect_on=False, frame_time = 0.1):
+        total_rewards = []
+        cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
+        for i in range(num_epochs):
             print('Training Iteration: {}'.format(i))
-            self.rfagent.train()
-            self.vragent.train()
             trainer.train()
-            while not done:
-                action = trainer.compute_action(state, prev_action=action, prev_reward=reward)
+            if i > 0:
+                self.rfagent.train()
+                self.vragent.train()
+            num_players = self.env.num_players
+            self.close()
+            state = self.reset()
+            done = {"__all__": False}
+            action = {str(i): None for i in range(num_players)}
+            reward = {str(i): None for i in range(num_players)}
+            cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
+            
+            while not done['__all__']:
+                action = {i: trainer.compute_action(state[i], prev_action=action[i], prev_reward=reward[i], policy_id=i) for
+                          i in map(str, range(num_players))}
                 state, reward, done, results = self.step(action)
-                cumulative_reward += reward
+                for i in range(len(reward.values())):
+                    cumulative_reward[i] += list(reward.values())[i]
                 self.render()
+                
                 sleep(frame_time)
-            self.render()
+            # Add player one's cumulative reward's to list
+            total_rewards.append(cumulative_reward)
+        
+        self.render()
+        # Graph player one's cumulative reward list as Y and iterations 0-99 as X
+        ray.shutdown()
         return cumulative_reward
 
-
-
-# Some preprocessing to let the network learn faster
+# Some preprocessing to let the networks learn faster
 class TronExtractBoard(Preprocessor):
     def _init_shape(self, obs_space, options):
-        board_size = env.observation_space['board'].shape[0]
+        board_size = env_gbl.observation_space['board'].shape[0]
         return (board_size + 4, board_size + 4, 2)
-
+    
     def transform(self, observation):
+        if 'board' in observation:
+            return self._transform(observation)
+        else:
+            return {key: self._transform(value) for key, value in observation.items()}
+    
+    def _transform(self, observation):
         board = observation['board']
         
         # Make all enemies look the same
@@ -412,38 +459,60 @@ class TronExtractBoard(Preprocessor):
         
         return np.concatenate([board, heads], axis=-1)
 
+def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.01):
+    # Initialize training environment
+    ray.init()
 
+    def environment_creater(params=None):
+        return TronRayEnvironment(board_size=15, num_players=4, epsilon=epsilon)
 
-# Initialize training environment
-ray.init()
+    env = environment_creater()
+    tune.register_env("tron_multi_player", environment_creater)
+    global env_gbl
+    env_gbl = env
+    ModelCatalog.register_custom_preprocessor("tron_prep", TronExtractBoard)
 
-def environment_creater(params=None):
-    return TronRaySinglePlayerEnvironment(board_size=15, num_players=4)
+    # Configure Deep Q Learning for multi-agent training
+    config = DEFAULT_CONFIG.copy()
+    config['num_workers'] = 1
+    config["timesteps_per_iteration"] = 128
+    config['target_network_update_freq'] = 64
+    config['buffer_size'] = 100_000
+    config['compress_observations'] = False
+    config['n_step'] = 2
+    config["framework"] = "torch"
 
-env = environment_creater()
-tune.register_env("tron_agent_battle", environment_creater)
-ModelCatalog.register_custom_preprocessor("tron_prep", TronExtractBoard)
+    # Dummy agents
+    agent_config_dummy = {
+        "model": {
+            "vf_share_layers": True,
+            "conv_filters": [(512, 5, 1), (256, 3, 2), (128, 3, 2), (64, 5, 1)],
+            "fcnet_hiddens": [64],
+            "custom_preprocessor": 'tron_prep'
+        }
+    }
 
-# Configure Deep Q Learning with reasonable values
-config = DEFAULT_CONFIG.copy()
-config['num_workers'] = 4
-config['num_gpus'] = 1
-config["timesteps_per_iteration"] = 1024
-config['target_network_update_freq'] = 128
-config['buffer_size'] = 1_000_000
-config['compress_observations'] = False
-config['n_step'] = 3
-config['seed'] = SEED
-config["framework"] = "torch"
+    # Agent with changed params
+    agent_config_trained = {
+        "model": {
+            "vf_share_layers": True,
+            "conv_filters": [(512, 5, 1), (256, 3, 2), (128, 3, 2), (64, 5, 1)],
+            "fcnet_hiddens": [num_nodes for _ in range(num_hidden)],
+            "fcnet_activation": act,
+            "custom_preprocessor": 'tron_prep'
+        }
+    }
 
-# We will use a simple convolutiotrainer.save("./checkpoint")n network with 3 layers as our feature extractor
-config['model']['vf_share_layers'] = True
-config['model']['conv_filters'] = [(512, 5, 1), (256, 3, 2), (128, 3, 2), (64, 5, 1)]
-config['model']['fcnet_hiddens'] = [64]
-config['model']['custom_preprocessor'] = 'tron_prep'
+    # index 0 = agent with changed params
+    config['multiagent'] = {
+            "policy_mapping_fn": lambda x, episode, **kwargs: str(x),
+            "policies": {str(i): (None, env.observation_space, env.action_space, agent_config_trained if i == 0 else agent_config_dummy) for i in range(env.env.num_players)}
+    }
+        
+    trainer = DQNTrainer(config, "tron_multi_player")
+    return trainer, env
 
-# Begin training or evaluation
-trainer = DQNTrainer(config, "tron_agent_battle")
-
-num_epoch = 100
-reward = env.test(trainer, epochs=num_epoch)
+num_epoch = 5
+trainer, env = start_session()
+rewards = env.test(num_epoch, trainer)
+print(rewards)
