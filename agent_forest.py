@@ -45,6 +45,7 @@ class RandomForestAgent:
         self.state, self.players = self.env.new_state()
         self.cumulative_rewards = {}
         self.cumulative_reward_player_train = 0
+        self.normalize_player_train_wins = False
         return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
     def step(self):
@@ -127,7 +128,7 @@ class RandomForestAgent:
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
             self.render()
             total_rewards.append(cumulative_reward)

@@ -49,6 +49,7 @@ class EnsembleAgent:
         self.state, self.players = self.env.new_state()
         self.cumulative_rewards = {}
         self.cumulative_reward_player_train = 0
+        self.normalize_player_train_wins = False
         return {str(i): self.env.state_to_observation(self.state, i) for i in range(self.env.num_players)}
 
     def step(self):
@@ -113,7 +114,7 @@ class EnsembleAgent:
         player_reward_data = []
         player_delta_data = []
         for i in range(num_epoch):
-            self.close()
+            #self.close()
             print("Training iteration: {}".format(i))
             state = self.reset()
             if i > 0:
@@ -126,15 +127,15 @@ class EnsembleAgent:
             while not done['__all__']:
                 state, reward, done, results = self.step()
                 cumulative_reward += list(reward.values())[self.PLAYER_TRAIN_INDEX]
-                self.render()
+                #self.render()
                 sleep(frame_time)
 
             # Add player one's cumulative reward's to list
             if self.data_collect_on:
                 PLAYER_WIN_AMOUNT = 9
-                player_reward_data.append(self.cumulative_reward_player_train - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
+                player_reward_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0))
                 player_delta_data.append(self.cumulative_rewards[self.PLAYER_TRAIN_INDEX] - (PLAYER_WIN_AMOUNT if self.normalize_player_train_wins else 0) - np.average([v for k, v in self.cumulative_rewards.items() if k != self.PLAYER_TRAIN_INDEX]))
-            self.render()
+            #self.render()
             total_rewards.append(cumulative_reward)
             self.gno += 1
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
@@ -206,36 +207,36 @@ if __name__ == "__main__":
     num_epoch = 100
     epochs = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
-    # AdaBoost Num Estimators
-    data_estimators = []
-    num_estimators = [10, 25, 50, 100, 150, 200]
-    for ne in num_estimators:
-        agent = EnsembleAgent(estimators=ne)
-        rewards = agent.test(num_epoch, 'ada_estimators', ne, data_collect_on=True)
-        data_estimators.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Ensemble Agent AdaBoost Num Estimators', 'densemble_heat_ada_estimators.png')
+    # # AdaBoost Num Estimators
+    # data_estimators = []
+    # num_estimators = [10, 25, 50, 100, 150, 200]
+    # for ne in num_estimators:
+    #     agent = EnsembleAgent(estimators=ne)
+    #     rewards = agent.test(num_epoch, 'ada_estimators', ne, data_collect_on=True)
+    #     data_estimators.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    # graphing.plot_heatmap(num_estimators, epochs, data_estimators, 'Num Estimators', 'Epoch', 'Ensemble Agent AdaBoost Num Estimators', 'densemble_heat_ada_estimators.png')
 
-    # AdaBoost Loss Function
-    data_functions = []
-    loss_functions = ['linear', 'square', 'exponential']
-    for lf in loss_functions:
-        agent = EnsembleAgent(loss=lf)
-        rewards = agent.test(num_epoch, 'ada_loss', lf, data_collect_on=True)
-        data_functions.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(loss_functions, epochs, data_functions, 'Loss Function', 'Epoch', 'Ensemble Agent AdaBoost Loss Function', 'ensemble_heat_ada_lossfunction.png')
+    # # AdaBoost Loss Function
+    # data_functions = []
+    # loss_functions = ['linear', 'square', 'exponential']
+    # for lf in loss_functions:
+    #     agent = EnsembleAgent(loss=lf)
+    #     rewards = agent.test(num_epoch, 'ada_loss', lf, data_collect_on=True)
+    #     data_functions.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    # graphing.plot_heatmap(loss_functions, epochs, data_functions, 'Loss Function', 'Epoch', 'Ensemble Agent AdaBoost Loss Function', 'ensemble_heat_ada_lossfunction.png')
 
-    # Support Vector Kernal
-    data_kernel = []
-    kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
-    for kr in kernels:
-        agent = EnsembleAgent(kernel=kr)
-        rewards = agent.test(num_epoch, 'svr_kernel', kr, data_collect_on=True)
-        data_kernel.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
-    graphing.plot_heatmap(kernels, epochs, data_kernel, 'Kernel', 'Epoch', 'Ensemble Agent Support Vector Regressor Kernal', 'ensemble_heat_svr_kernal.png')
+    # # Support Vector Kernal
+    # data_kernel = []
+    # kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
+    # for kr in kernels:
+    #     agent = EnsembleAgent(kernel=kr)
+    #     rewards = agent.test(num_epoch, 'svr_kernel', kr, data_collect_on=True)
+    #     data_kernel.append([rewards[9], rewards[19], rewards[29], rewards[39], rewards[49], rewards[59], rewards[69], rewards[79], rewards[89], rewards[99]])
+    # graphing.plot_heatmap(kernels, epochs, data_kernel, 'Kernel', 'Epoch', 'Ensemble Agent Support Vector Regressor Kernal', 'ensemble_heat_svr_kernal.png')
 
     # Multilayer Perceptron Activation
     data_activation = []
-    activations = ['identity', 'logistic', 'relu', ' softmax', 'tanh']
+    activations = ['identity', 'logistic', 'relu', 'tanh']
     for av in activations:
         agent = EnsembleAgent(activation=av)
         rewards = agent.test(num_epoch, 'mlp_activation', av, data_collect_on=True)
