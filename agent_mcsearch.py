@@ -67,11 +67,13 @@ class MCSearchAgent:
         return observations, rewards, dones, {}
 
     def render(self, mode='human'):
+        return None
         if self.state is None:
             return None
         return self.renderer.render(self.state, mode)
 
     def close(self):
+        return None
         self.renderer.close()
         
     def test(self, num_epoch, param, val, frame_time = 0.1, data_collect_on=False):
