@@ -39,7 +39,7 @@ env_gbl = None
 
 
 class MCSearchAgentMA:
-    def __init__(self, depth=2, epsilon=0.01, board_size=15, num_players=4, w=50, d=-50):
+    def __init__(self, depth=5, epsilon=0.1, board_size=15, num_players=4, w=50, d=-50):
         self.test_depth = depth
         self.max_depth = 2
         self.epsilon = epsilon # chance of taking a random action instead of the best
@@ -113,7 +113,7 @@ class MCSearchAgentMA:
 
 
 class RandomForestAgentMA:
-    def __init__(self, depth=None, estimators=100, epsilon=0.01, max_leaf=None):
+    def __init__(self, depth=None, estimators=100, epsilon=0.1, max_leaf=None):
         self.max_depth = depth
         self.est = estimators
         self.rforest = None
@@ -201,7 +201,7 @@ class RandomForestAgentMA:
 
 
 class EnsembleForestAgentMA:
-    def __init__(self, estimators=50, loss='linear', kernel='rbf', activation='relu', hidden_layers=(100,), epsilon=0.01):
+    def __init__(self, estimators=200, loss='exponential', kernel='poly', activation='relu', hidden_layers=(50,), epsilon=0.1):
         self.est = estimators
         self.ensemble = None
         self.train_states = []
@@ -459,7 +459,7 @@ class TronExtractBoard(Preprocessor):
         
         return np.concatenate([board, heads], axis=-1)
 
-def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.01):
+def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     # Initialize training environment
     ray.init()
 
