@@ -320,9 +320,9 @@ class TronRayEnvironment(MultiAgentEnv):
             'directions': Box(0, 4, shape=(num_players,)),
             'deaths': Box(0, num_players, shape=(num_players,))
         })
-        self.mcagent = MCSearchAgentMA(depth=2, epsilon=0.01)
-        self.rfagent = RandomForestAgentMA(depth=None, estimators=100, epsilon=0.01, max_leaf=None)
-        self.vragent = EnsembleForestAgentMA(estimators=50, loss='linear', kernel='rbf', activation='relu', hidden_layers=(100,), epsilon=0.01)
+        self.mcagent = MCSearchAgentMA()
+        self.rfagent = RandomForestAgentMA()
+        self.vragent = EnsembleForestAgentMA()
 
     def reset(self):
         self.state, self.players = self.env.new_state()
@@ -380,7 +380,7 @@ class TronRayEnvironment(MultiAgentEnv):
         dones = {str(i): i not in alive_players for i in map(int, action_dict.keys())}
         dones['__all__'] = terminal
 
-        return observations, rewards, dones, {}
+        return observations, rewards, dones, winners
 
     def render(self, mode='human'):
         return None
@@ -394,8 +394,9 @@ class TronRayEnvironment(MultiAgentEnv):
         self.renderer.close()
         
     def test(self, num_epochs, trainer, param=None, val=None, data_collect_on=False, frame_time = 0.1):
-        total_rewards = []
+        total_rewards = {0: [], 1: [], 2: [], 3: []}
         cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
+        winners = []
         for i in range(num_epochs):
             print('Training Iteration: {}'.format(i))
             trainer.train()
@@ -409,23 +410,28 @@ class TronRayEnvironment(MultiAgentEnv):
             action = {str(i): None for i in range(num_players)}
             reward = {str(i): None for i in range(num_players)}
             cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
-            
+            win_temp = []
             while not done['__all__']:
                 action = {i: trainer.compute_action(state[i], prev_action=action[i], prev_reward=reward[i], policy_id=i) for
                           i in map(str, range(num_players))}
                 state, reward, done, results = self.step(action)
                 for i in range(len(reward.values())):
                     cumulative_reward[i] += list(reward.values())[i]
+                if results:
+                    win_temp.extend(results)
                 self.render()
                 
                 sleep(frame_time)
+            for j in range(len(win_temp)):
+                winners.append((i, results[j]))
             # Add player one's cumulative reward's to list
-            total_rewards.append(cumulative_reward)
+            for i in range(4):
+                total_rewards[i].append(cumulative_reward[i])
         
         self.render()
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         ray.shutdown()
-        return cumulative_reward
+        return total_rewards, winners
 
 # Some preprocessing to let the networks learn faster
 class TronExtractBoard(Preprocessor):
@@ -474,7 +480,7 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
 
     # Configure Deep Q Learning for multi-agent training
     config = DEFAULT_CONFIG.copy()
-    config['num_workers'] = 1
+    config['num_workers'] = 4
     config["timesteps_per_iteration"] = 128
     config['target_network_update_freq'] = 64
     config['buffer_size'] = 100_000
@@ -512,7 +518,10 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-num_epoch = 5
-trainer, env = start_session()
-rewards = env.test(num_epoch, trainer)
-print(rewards)
+if __name__ == "__main__":
+    num_epoch = 2
+    trainer, env = start_session()
+    rewards, winners = env.test(num_epoch, trainer)
+    for i in range(4):
+        graphing.plot_graph(num_epoch, rewards[i], 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Agent {}'.format(i+1), 'agent_{}_competition_reward.png'.format(i+1))
+    graphing.plot_scatter(winners, 'Iterations (Num Games/Epochs)', 'Player Number', 'Winners Per Game', 'competition_winners.png')

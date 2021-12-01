@@ -14,6 +14,15 @@ def plot_graph(num_epoch, data, x, y, title, path):
     plt.title(title)
     plt.savefig(DIR_PATH + path, bbox_inches='tight')
 
+def plot_scatter(data, x, y, title, path):
+    f, ax = plt.subplots(1, 1)
+    for i, p in data:
+        ax.scatter(i, p)
+    plt.xlabel(x)
+    plt.ylabel(y)
+    plt.title(title)
+    plt.savefig(DIR_PATH + path, bbox_inches='tight')
+
 def plot_heatmap(params, epochs, data, x, y, title, path):
     data = transpose(data, [])
     f, ax = plt.subplots(1, 1)
