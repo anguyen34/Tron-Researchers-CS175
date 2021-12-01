@@ -467,7 +467,7 @@ class TronExtractBoard(Preprocessor):
 
 def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     # Initialize training environment
-    ray.init()
+    ray.init(num_cpus=4, num_gpus=1)
 
     def environment_creater(params=None):
         return TronRayEnvironment(board_size=15, num_players=4, epsilon=epsilon)
@@ -518,10 +518,9 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-if __name__ == "__main__":
-    num_epoch = 2
-    trainer, env = start_session()
-    rewards, winners = env.test(num_epoch, trainer)
-    for i in range(4):
-        graphing.plot_graph(num_epoch, rewards[i], 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Agent {}'.format(i+1), 'agent_{}_competition_reward.png'.format(i+1))
-    graphing.plot_scatter(winners, 'Iterations (Num Games/Epochs)', 'Player Number', 'Winners Per Game', 'competition_winners.png')
+num_epoch = 2
+trainer, env = start_session()
+rewards, winners = env.test(num_epoch, trainer)
+for i in range(4):
+    graphing.plot_graph(num_epoch, rewards[i], 'Iterations (Num Games/Epochs)', 'Cumulative Reward', 'Cumulative Reward of Agent {}'.format(i+1), 'agent_{}_competition_reward.png'.format(i+1))
+graphing.plot_scatter(winners, 'Iterations (Num Games/Epochs)', 'Player Number', 'Winners Per Game', 'competition_winners.png')
