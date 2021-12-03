@@ -39,9 +39,8 @@ env_gbl = None
 
 
 class MCSearchAgentMA:
-    def __init__(self, depth=5, epsilon=0.1, board_size=15, num_players=4, w=50, d=-50):
+    def __init__(self, depth=5, epsilon=0.1, w=50, d=-50):
         self.test_depth = depth
-        self.max_depth = 2
         self.epsilon = epsilon # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
         self.WON = w
@@ -380,7 +379,7 @@ class TronRayEnvironment(MultiAgentEnv):
         dones = {str(i): i not in alive_players for i in map(int, action_dict.keys())}
         dones['__all__'] = terminal
 
-        return observations, rewards, dones, winners
+        return observations, rewards, dones, {}
 
     def render(self, mode='human'):
         return None
@@ -397,10 +396,10 @@ class TronRayEnvironment(MultiAgentEnv):
         total_rewards = {0: [], 1: [], 2: [], 3: []}
         cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
         winners = []
-        for i in range(num_epochs):
-            print('Training Iteration: {}'.format(i))
+        for e in range(num_epochs):
+            print('Training Iteration: {}'.format(e))
             trainer.train()
-            if i > 0:
+            if e > 0:
                 self.rfagent.train()
                 self.vragent.train()
             num_players = self.env.num_players
@@ -410,20 +409,26 @@ class TronRayEnvironment(MultiAgentEnv):
             action = {str(i): None for i in range(num_players)}
             reward = {str(i): None for i in range(num_players)}
             cumulative_reward = {0: 0, 1: 0, 2: 0, 3: 0}
-            win_temp = []
             while not done['__all__']:
                 action = {i: trainer.compute_action(state[i], prev_action=action[i], prev_reward=reward[i], policy_id=i) for
                           i in map(str, range(num_players))}
                 state, reward, done, results = self.step(action)
                 for i in range(len(reward.values())):
                     cumulative_reward[i] += list(reward.values())[i]
-                if results:
-                    win_temp.extend(results)
                 self.render()
                 
                 sleep(frame_time)
-            for j in range(len(win_temp)):
-                winners.append((i, results[j]))
+            print(cumulative_reward)
+            win = max(cumulative_reward, key=cumulative_reward.get)
+            tie = False
+            for k in cumulative_reward:
+                if k == win:
+                    continue
+                else:
+                    if cumulative_reward[k] == cumulative_reward[win]:
+                        tie = True
+            if not tie:
+                winners.append((e, win))
             # Add player one's cumulative reward's to list
             for i in range(4):
                 total_rewards[i].append(cumulative_reward[i])
@@ -431,6 +436,7 @@ class TronRayEnvironment(MultiAgentEnv):
         self.render()
         # Graph player one's cumulative reward list as Y and iterations 0-99 as X
         ray.shutdown()
+        print(winners)
         return total_rewards, winners
 
 # Some preprocessing to let the networks learn faster
@@ -518,7 +524,7 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-num_epoch = 2
+num_epoch = 3
 trainer, env = start_session()
 rewards, winners = env.test(num_epoch, trainer)
 for i in range(4):
