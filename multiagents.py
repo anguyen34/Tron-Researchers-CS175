@@ -39,7 +39,7 @@ env_gbl = None
 
 
 class MCSearchAgentMA:
-    def __init__(self, depth=5, epsilon=0.1, w=50, d=-50):
+    def __init__(self, depth=1, epsilon=0.1, w=50, d=-50):
         self.test_depth = depth
         self.epsilon = epsilon # chance of taking a random action instead of the best
         self.actions = ["forward", "left", "right"]
