@@ -17,7 +17,14 @@ def plot_graph(num_epoch, data, x, y, title, path):
 def plot_scatter(data, x, y, title, path):
     f, ax = plt.subplots(1, 1)
     for i, p in data:
-        ax.plot(i, p)
+        color = 'b'
+        if p == 0:
+            color = 'r'
+        elif p == 1:
+            color = 'g'
+        elif p == 2:
+            color = 'y'
+        ax.scatter(i, p + 1, c=color)
     plt.xlabel(x)
     plt.ylabel(y)
     plt.title(title)
