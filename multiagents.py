@@ -382,14 +382,14 @@ class TronRayEnvironment(MultiAgentEnv):
         return observations, rewards, dones, {}
 
     def render(self, mode='human'):
-        return None
+        #return None
         if self.state is None:
             return None
 
         return self.renderer.render(self.state, mode)
 
     def close(self):
-        return None
+        #return None
         self.renderer.close()
         
     def test(self, num_epochs, trainer, param=None, val=None, data_collect_on=False, frame_time = 0.1):
@@ -473,7 +473,7 @@ class TronExtractBoard(Preprocessor):
 
 def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     # Initialize training environment
-    ray.init(num_cpus=4, num_gpus=1)
+    ray.init(num_cpus=3, num_gpus=1)
 
     def environment_creater(params=None):
         return TronRayEnvironment(board_size=15, num_players=4, epsilon=epsilon)
@@ -486,7 +486,7 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
 
     # Configure Deep Q Learning for multi-agent training
     config = DEFAULT_CONFIG.copy()
-    config['num_workers'] = 4
+    config['num_workers'] = 3
     config["timesteps_per_iteration"] = 128
     config['target_network_update_freq'] = 64
     config['buffer_size'] = 100_000
@@ -524,7 +524,7 @@ def start_session(num_hidden=1, num_nodes=64, act='relu', epsilon=0.1):
     trainer = DQNTrainer(config, "tron_multi_player")
     return trainer, env
 
-num_epoch = 3
+num_epoch = 100
 trainer, env = start_session()
 rewards, winners = env.test(num_epoch, trainer)
 for i in range(4):
