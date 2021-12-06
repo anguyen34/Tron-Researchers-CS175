@@ -46,25 +46,42 @@ The two types of data values we collected at the end of each epoch were the norm
 Some implementation details that are mostly the same across all four agents is the general layout of each agent. Each agent environment is composed of a class with a test and step function to control the games being run over a defined amount of epochs. Each agent environment accounts for the agent with the modified parameters and the three agents that are unmodified. When an agent environment object is instantiated the parameters for the agent being modified are also passed in and stored. Other variables such as the Regressors for each agent, the cumulative rewards for each agent, alive players, and game state are stored as class attributes.
 
 Pseudocode example of an agent class' test method to run through the epochs:
+
 def test(num_epochs):
+
     for i in range(num_epochs):
+    
         reset game state
+        
         train agents
+        
         while game not done:
+        
             step()
+            
         collect cumulative reward data from class attributes of cumulative reward
+        
         collect calculated delta reward from class attributes of cumulative reward
+        
         plot graph of cumulative reward over epochs
+        
         plot graph of delta reward over epochs
         
 Pseudocode example of an agent class' step method for a single move in game:
 def step():
+
     actions = []
+    
     for p in players:
+    
         actions.append(choose_move(p))
+        
     state, players, rewards, terminal, winners = environment.next_state(state, players, actions)
+    
     for p in players:
+    
         cumulative_rewards[p] += rewards[p]
+        
     Save data on move taken, resulting board state, etc if Ensemble or Random Forest
         
 ## Evaluation:
