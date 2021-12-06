@@ -48,43 +48,43 @@ Some implementation details that are mostly the same across all four agents is t
 Pseudocode example of an agent class' test method to run through the epochs:
 
 
-def test(num_epochs):
+    def test(num_epochs):
 
-    for i in range(num_epochs):
-    
-        reset game state
-        
-        train agents
-        
-        while game not done:
-        
-            step()
-            
-        collect cumulative reward data from class attributes of cumulative reward
-        
-        collect calculated delta reward from class attributes of cumulative reward
-        
-        plot graph of cumulative reward over epochs
-        
-        plot graph of delta reward over epochs
+        for i in range(num_epochs):
+
+            reset game state
+
+            train agents
+
+            while game not done:
+
+                step()
+
+            collect cumulative reward data from class attributes of cumulative reward
+
+            collect calculated delta reward from class attributes of cumulative reward
+
+            plot graph of cumulative reward over epochs
+
+            plot graph of delta reward over epochs
         
 Pseudocode example of an agent class' step method for a single move in game:
 
-def step():
+    def step():
 
-    actions = []
-    
-    for p in players:
-    
-        actions.append(choose_move(p))
-        
-    state, players, rewards, terminal, winners = environment.next_state(state, players, actions)
-    
-    for p in players:
-    
-        cumulative_rewards[p] += rewards[p]
-        
-    Save data on move taken, resulting board state, etc if Ensemble or Random Forest
+         actions = []
+
+         for p in players:
+
+             actions.append(choose_move(p))
+
+         state, players, rewards, terminal, winners = environment.next_state(state, players, actions)
+
+         for p in players:
+
+             cumulative_rewards[p] += rewards[p]
+
+         Save data on move taken, resulting board state, etc if Ensemble or Random Forest
         
 ## Evaluation:
 
