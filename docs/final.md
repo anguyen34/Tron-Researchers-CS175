@@ -43,6 +43,30 @@ Data collection for testing parameters followed two distinct approaches, one is 
  
 The two types of data values we collected at the end of each epoch were the normalized cumulative reward of the modified agent and the difference in rewards of the modified agent and the averaged rewards of the three opponent agents. In normalizing the cumulative reward, we would remove the reward for winning a game if the observed agent had won, with the goal being that we wanted to have more consistent data from non-winning games. We chose to record data on the normalized cumulative reward since the ColosseumRL Tron game rewarded an agent with a reward of 1 for just surviving, so a higher cumulative reward indicated the agent was surviving longer by learning. In addition, when possible we trained the agents to maximize the cumulative received reward from ColossuemRL, so it made sense to record the data for the values the agents were trying to predict. The second type of data collected was the difference in reward between the observed agent’s final cumulative reward and the averaged final cumulative reward of the other agents, which we refer to as the delta reward. An issue for our recorded delta reward was that games where the observed agent won were normalized by removing the bonus reward for winning, but this normalization was not applied to games where other agents won. As a result, the negative delta rewards are greater in magnitude than expected, but our analysis accounts for this error. Our goal in measuring delta reward was to see how the modified agent performed relative to the unmodified agents. A positive delta reward indicated that the modified agent was outperforming the unmodified agents. We hoped to see a consistently positive or negative delta reward, as it would clearly indicate whether a parameter had an effect on the model. Another potential metric we could have measured was the win rates of modified agents over the epochs, but it was a metric that was disconnected from the reward values and could already be encompassed by the delta reward.
 
+Some implementation details that are mostly the same across all four agents is the general layout of each agent. Each agent environment is composed of a class with a test and step function to control the games being run over a defined amount of epochs. Each agent environment accounts for the agent with the modified parameters and the three agents that are unmodified. When an agent environment object is instantiated the parameters for the agent being modified are also passed in and stored. Other variables such as the Regressors for each agent, the cumulative rewards for each agent, alive players, and game state are stored as class attributes.
+
+Pseudocode example of an agent class' test method to run through the epochs:
+def test(num_epochs):
+    for i in range(num_epochs):
+        reset game state
+        train agents
+        while game not done:
+            step()
+        collect cumulative reward data from class attributes of cumulative reward
+        collect calculated delta reward from class attributes of cumulative reward
+        plot graph of cumulative reward over epochs
+        plot graph of delta reward over epochs
+        
+Pseudocode example of an agent class' step method for a single move in game:
+def step():
+    actions = []
+    for p in players:
+        actions.append(choose_move(p))
+    state, players, rewards, terminal, winners = environment.next_state(state, players, actions)
+    for p in players:
+        cumulative_rewards[p] += rewards[p]
+    Save data on move taken, resulting board state, etc if Ensemble or Random Forest
+        
 ## Evaluation:
 
 ## References:
