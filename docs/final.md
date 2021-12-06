@@ -47,6 +47,7 @@ Some implementation details that are mostly the same across all four agents is t
 
 Pseudocode example of an agent class' test method to run through the epochs:
 
+
 def test(num_epochs):
 
     for i in range(num_epochs):
@@ -68,6 +69,7 @@ def test(num_epochs):
         plot graph of delta reward over epochs
         
 Pseudocode example of an agent class' step method for a single move in game:
+
 def step():
 
     actions = []
