@@ -148,6 +148,80 @@ The cumulative reward data shows a strong average and upward trend which means t
 
 The cumulative reward data is completely erratic and inconsistent while the delta reward data is the same but also with a downward trend. Overall this shows that 0.5 is much too high of an epsilon value and that the epsilon parameter itself is a very impactful parameter. To summarize, the most impactful parameters were number of hidden layers, number of nodes per layer, and epsilon while the least impactful was the activation function.
 
+In the Voting Regressor Ensemble agent, we first tested the number of estimators for the Adaboost Regressor and found, surprisingly, that the performance was generally the same for all values implying that this parameter had low impact. The summary of the cumulative reward for each value can be seen below: 
+
+<img src="images/ensemble/estimators/ensemble_heat_ada_estimators.png?raw=true" width="450" /> 
+
+We found 200 to be the most positively impactful value because of its consistency; the data for this can be seen below: 
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_200.png?raw=true" width="450" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_200.png?raw=true" width="450" /> 
+
+The cumulative reward for this value has an upward trend with very consistent values, high peaks when it does deviate from the average, and small dips compared to the other values. The delta reward is similar to the others but with less volatility. The most negatively influential value was found to be 25; the data for this value can be seen below:
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_25.png?raw=true" width="450" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_25.png?raw=true" width="450" /> 
+
+The cumulative reward for this value was lower than the others on average and displayed much more volatile results. The delta reward was largely negative with a strong downward trend which shows decreased learning. For the Adaboost Regressor loss function, we found that the data was very similar for each value which means that this was not a very impactful parameter. The summary of cumulative rewards can be seen below: 
+
+<img src="images/ensemble/loss/ensemble_heat_ada_lossfunction.png?raw=true" width="450" /> 
+
+The best value was found to be exponential; the data for this can be seen below: 
+
+<img src="images/ensemble/loss/ensemble_cumulative_ada_loss_exponential.png?raw=true" width="450" /> <img src="images/ensemble/loss/ensemble_delta_ada_loss_exponential.png?raw=true" width="450" /> 
+
+The cumulative reward data for this value was similar to the other data except that it has more and higher peaks while not dipping in performance by a large amount. The delta reward data shows this value to have the higher average value and a more constant trend rather than downward. The most negatively influential value was found to be the square loss function as it has the lower values, although not by much. This data can be seen below: 
+
+<img src="images/ensemble/loss/ensemble_cumulative_ada_loss_square.png?raw=true" width="450" /> <img src="images/ensemble/loss/ensemble_delta_ada_loss_square.png?raw=true" width="450" /> 
+
+Overall this parameter didn’t have much impact as the data was very similar for each value. For the Support Vector Machine Kernel, we found that changing this parameter impacted the volatility of the performance. The summary of the cumulative reward data for the chosen values can be seen below: 
+
+<img src="images/ensemble/kernal/ensemble_heat_svr_kernal.png?raw=true" width="450" /> 
+
+We found that the Poly kernel had the best performance; its data can be seen below: 
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_poly.png?raw=true" width="450" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_poly.png?raw=true" width="450" /> 
+
+The cumulative rewards for this value had the same average as the others but with fewer dips and more/higher peaks. The delta reward data shows the weakest downward trend of all the values with some of the most positive values which made us conclude in this value being the most positively impactful value. The most negatively impactful parameter was found to be RBF; its data can be seen below: 
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_rbf.png?raw=true" width="450" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_rbf.png?raw=true" width="450" />  
+
+This value’s cumulative rewards has the most dips in performance, and its delta rewards has a strong downward trend with mostly negative values which lets us conclude that this value is the worst for performance. For the MultiLayer Perceptron activation function, we found that changing this parameter significantly changes the volatility and overall behavior of the agent performance. The summary of the performance can be seen below: 
+
+<img src="images/ensemble/kernal/ensemble_heat_mlp_activation.png?raw=true" width="450" /> 
+
+We found the ReLU activation function to be the most positively impactful value; the data for this can be seen below: 
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_relu.png?raw=true" width="450" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_relu.png?raw=true" width="450" /> 
+
+The cumulative reward for this value is not as consistent as some of the other values but it has a higher average reward value and much higher peaks. The delta reward data shows that ReLU has the most positive reward values compared to the other values. The most negatively influential value was found to be TanH; its data can be seen below: 
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_tanh.png?raw=true" width="450" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_tanh.png?raw=true" width="450" /> 
+
+The cumulative rewards for this value are lower on average with smaller peaks, and the delta reward data shows TanH to have much more negative values than the other parameter values.
+For the MultiLayer Perceptron number of layers, we found that changing this parameter greatly affected the performance of the agent. The summary of the performance can be seen in the heatmap below: 
+
+<img src="images/ensemble/layers/ensemble_heat_mlp_numlayers.png?raw=true" width="450" /> 
+
+We found that the best value to use is 50; the data for this can be seen below: 
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_50.png?raw=true" width="450" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_50.png?raw=true" width="450" /> 
+
+The cumulative rewards for 50 layers is very consistent with good average values and an upward trend. The delta reward is very positive with a strong upward trend as well which singles this value out as the best overall. The worst parameter was found to be 2 hidden layers; its data can be seen below: 
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_2.png?raw=true" width="450" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_2.png?raw=true" width="450" /> 
+
+The cumulative reward was very consistent but at a very low value with only a few peaks. The delta reward has mostly negative values and a strong downward trend. For the epsilon values, we found this value to increase volatility and randomness. The summary of the performance for the values chosen can be seen below: 
+
+<img src="images/ensemble/epsilon/ensemble_heat_epsilon.png?raw=true" width="450" /> 
+
+We found 0.1 to be the best value for this parameter overall; the data for this can be seen below: 
+
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.1.png?raw=true" width="450" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.1.png?raw=true" width="450" /> 
+The cumulative reward is much more consistent than the others with a stronger upward trend. The delta reward shows many positive values and a slight upward trend which is better than the other parameter values. The worst choice would be 0.5; its data can be seen below: 
+
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.5.png?raw=true" width="450" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.5.png?raw=true" width="450" /> 
+
+The cumulative reward shows the lowest average performance and a very low plateau compared to the others. The delta reward showed lower values than the other parameter values and a slight downward trend. To summarize, the highest impact parameters are the Support Vector Machine kernel, the MultiLayer Perceptron activation function and hidden layers, and epsilon; while, the lowest impact parameters were found to be the Adaboost number of estimators and Adaboost loss function.
+
 
 
 ## References:
