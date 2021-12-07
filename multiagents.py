@@ -200,7 +200,7 @@ class RandomForestAgentMA:
 
 
 class EnsembleForestAgentMA:
-    def __init__(self, estimators=200, loss='exponential', kernel='poly', activation='relu', hidden_layers=(50,), epsilon=0.1):
+    def __init__(self, estimators=200, loss='exponential', kernel='poly', activation='relu', hidden_layers=(100,) * 50, epsilon=0.1):
         self.est = estimators
         self.ensemble = None
         self.train_states = []
