@@ -100,7 +100,7 @@ Our qualitative analysis setup mostly consisted of us observing the GUI as the e
 
 For the Neural Network agent we first evaluated the number of hidden layers. We found that as more layers were added after the default value of 1, the volatility of the cumulative reward would increase while consistency decreased. This trend in cumulative reward can be seen in the heatmap below: 
 
-<img src="images/neural/layers/neural_heat_hidden_layers.png?raw=true" width="450" /> 
+<img src="images/neural/layers/neural_heat_hidden_layers.png?raw=true" width="400" /> 
 
 We ended up recommending 1 hidden layers as it was the most consistent; the graph of its cumulative reward and delta reward can be seen below: 
 
@@ -112,7 +112,7 @@ The cumulative graph shows an upward trend in cumulative reward with high peaks 
 
 While the cumulative data does trend upwards, it is much more volatile and inconsistent which makes it a worse choice. The delta reward shows that this value results in most data being below 0 which indicates poor performance against the other agents. For the number of nodes per layer, we found that high node counts resulted in higher reward averages and better learning rates compared to the other baseline agents overall. The overall trend in cumulative rewards can be seen in the heatmap below: 
 
-<img src="images/neural/nodes/neural_cumulative_Hidden Layers_1.png?raw=true" width="450" /> 
+<img src="images/neural/nodes/neural_heat_num_nodes.png?raw=true" width="400" /> 
 
 Based on these values we chose 64 as the best, most positively impactful parameter as the cumulative reward improves at this value with a mostly positive delta reward. The graphs for the cumulative and delta reward can be seen below: 
 
@@ -124,7 +124,7 @@ As you can see the cumulative reward has a high average while trending upward, a
 
 The cumulative reward for this value had lower averages while the delta reward had a negative average value with a downward trend. For the activation function, we found that the performance was similar for each value which would mean that this parameter was not very impactful overall. The performance for each value is summarized below: 
 
-<img src="images/neural/activation/neural_heat_activation.png?raw=true" width="450" /> 
+<img src="images/neural/activation/neural_heat_activation.png?raw=true" width="400" /> 
 
 Based on the data, ReLU seems to have the most positive impact on the performance; its data can be seen below: 
 
@@ -136,7 +136,7 @@ The cumulative reward has a high average, upward trend showing improvement, lowe
 
 The cumulative reward has the lowest average of the three, a much smaller upward trend, and very low dips in performance. The delta reward also shows massive performance dips and higher volatility than the other functions which let us conclude that it had the highest negative impact. For the epsilon values, we found that higher values displayed more volatility and erratic behavior while lower values were more consistent and showed more learning. The summary of the performance of each value can be seen in the heatmap below:
 
-<img src="images/neural/epsilon/neural_heat_epsilon.png?raw=true" width="450" /> 
+<img src="images/neural/epsilon/neural_heat_epsilon.png?raw=true" width="400" /> 
 
 Overall we found 0.1 to have the best performance and consistency based on the data below: 
 
