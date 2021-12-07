@@ -233,7 +233,7 @@ These trends are also consistent with the cumulative rewards collected. However,
 
 When looking at the heat map for the different number of estimators over many epochs, there is no noticeable trend upwards nor downwards for any of the values. Some values appear brighter and have a higher overall cumulative reward average like 100, and some have a lower overall average like 150.
 
-<img src="images/forest/estimators/forest_heat_estimators.png?raw=true" width="450" />
+<img src="images/forest/estimators/forest_heat_estimators.png?raw=true" width="400" />
 
 For Random Forest’s max depth, we found this parameter has an impact on the agent’s learning. When the max depth is low or set to none you are able to see a noticeable increase in the cumulative reward. Cumulative reward for max depth of 5 and None are shown below:
 
@@ -245,7 +245,7 @@ However, as the number of max depth increases there is a noticeable decline in p
 
 A heat map showing the full set of values tested for max depth can be seen below:
 
-<img src="images/forest/depth/forest_heat_maxdepth.png?raw=true" width="450" />
+<img src="images/forest/depth/forest_heat_maxdepth.png?raw=true" width="400" />
 
 When looking at the heat map, a max depth value of 10 might appear to be a stronger choice than None. However, once you look at it’s cumulative reward graph, its high volatility deterred our group from considering it to a good value. Cumulative reward for max depth of 10 shown below:
 
@@ -261,7 +261,7 @@ As the number of epochs increases, there is an increase in the cumulative reward
 
 The cumulative reward is very volatile and shows no apparent trends upward. The average cumulative reward in the last couple epochs are noticeably smaller for 10 max leaf nodes than for max leaf nodes of None. In the delta reward graph above, the average delta reward is around -2.5 which shows its weak performance in comparison to None. A heat map showing the performance of all other values and be seen below:
 
-<img src="images/forest/leaf/forest_heat_leafnodes.png?raw=true" width="450" />
+<img src="images/forest/leaf/forest_heat_leafnodes.png?raw=true" width="400" />
 
 The heat map shows a max leaf node of None is quite consistent with a couple of high peaks. Other values are more volatile and unpredictable, with some values appearing to have a decreasing trend like 25.
 The last value we tested for was epsilon. We found an epsilon value of 0.1 to be the most favorable. However values greater than 0.1 made the agent perform worse and more random. Cumulative and delta reward for 0.1 epsilon is shown below:
@@ -274,7 +274,7 @@ Both the cumulative and delta reward show an upwards trend. Out of all the other
 
 Epsilon 0.05 is a value that showed poor performance. In the cumulative reward, there is no apparent trend upward, and reward is very volatile in comparison to epsilon value of 0.1. When looking at the delta rewards, there is no signs that a value of 0.05 is better than a value of 0.01. A heat map showing the full set of epsilon value and cumulative reward is shown below:
 
-<img src="images/forest/epsilon/forest_heat_epsilon.png?raw=true" width="450" />
+<img src="images/forest/epsilon/forest_heat_epsilon.png?raw=true" width="400" />
 
 While the epsilon value of 0.1 starts with low cumulative reward, its rewards steadily increase and ends with the highest cumulative rewards in the last 2 epochs recorded. For our Random Forest agent, the most impactful parameters were the max depth, max leaf nodes, and epsilon while the least impactful value was the number of estimators.
 The first parameter we tested for our Monte Carlo Search Tree agent was search depth. We found that no particular depth proved to be better than the others. Because of how Monte Carlo Search tree operates, cumulative reward was not expected to increase over more epochs. However, we did want to observe the average cumulative reward. A depth of one showed to be the slightly more favorable value. Cumulative and delta reward for depth 1 is shown below:
