@@ -120,7 +120,7 @@ Based on these values we chose 64 as the best, most positively impactful paramet
 
 As you can see the cumulative reward has a high average while trending upward, and the delta reward has mostly positive values compared to the other values. An example of another parameter with high impact would be 2; this value was very influential on the performance in a negative way. The performance can be seen below: 
 
-<img src="images/neural/nodes/neural_cumulative_Nodes Per Layer_2.png?raw=true" width="450" /> <img src="images/nodes/neural_delta_Nodes Per Layer_2.png?raw=true" width="450" /> 
+<img src="images/neural/nodes/neural_cumulative_Nodes Per Layer_2.png?raw=true" width="450" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_2.png?raw=true" width="450" /> 
 
 The cumulative reward for this value had lower averages while the delta reward had a negative average value with a downward trend. For the activation function, we found that the performance was similar for each value which would mean that this parameter was not very impactful overall. The performance for each value is summarized below: 
 
