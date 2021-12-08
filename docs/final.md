@@ -253,7 +253,7 @@ When looking at the heat map, a max depth value of 10 might appear to be a stron
 
 The third parameter we tested in Random Forest was the max leaf nodes which we found None to be the best cumulative and delta rewards. The cumulative and delta reward for None are show below:
 
-<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_None.png?raw=true" width="450" />
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_None.png?raw=true" width="450" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_None.png?raw=true" width="450" />
 
 As the number of epochs increases, there is an increase in the cumulative reward. While the increase in rewards appears slight it is better than values we tested that show even smaller increases to no increases at all. Cumulative and delta reward for max leaf nodes of 10.
 
@@ -296,7 +296,17 @@ The cumulative reward reach has an average around 20 and strong peaks reach up t
 
 The delta reward shows many lows and seems to underperform compared to epsilon of 2. Based on the cumulative reward, it performs decently but not as well as the epsilon value of 0.1. As the epsilon value gets greater, the average cumulative value drops dramatically. Epsilon is an impactful parameter in our Monte Carlo Search Tree agent, but the depth parameter has little impact on the performance of the agent. While no particular depth proved to result in a higher cumulative reward, depth 1 was favored mainly because it required less runtime.
 
+When we had the agents play against each other, for each agent’s parameters we assigned a tested value that we believed to be the most successful. For the Neural Network agent, mapped as player 1, it had 1 hidden layer of 64 nodes, used a ReLU activation function, and had an epsilon value of 0.10. The Monte Carlo agent, mapped as player 2, had a max depth level of 1 and an epsilon value of 0.10. Our Random Forest agent, mapped as player 3, had no max depth, no maximum number of leaves, 100 estimators, and an epsilon value of 0.10. Finally, our Ensemble agent, player 4, used 200 estimators and an exponential loss function for AdaBoost, a Poly kernel function for the Support Vector Machine, a ReLU activation function and 50 hidden layers of 100 nodes each for the Multilayer Perceptron, and an epsilon value of 0.10. The four agents played against each other for 100 games/epochs, with the three machine learning agents training at the end of each game. In terms of success, the results are clear, with player 2, the Monte Carlo search agent, winning the vast majority of the games played, as seen by the graph below:
 
+<img src="images/competition_winners.png?raw=true" width="450" />
+
+The dominance of the Monte Carlo search agent is further reinforced when looking at the respective cumulative reward graphs of each agent:
+
+<img src="images/agent_1_competition_reward" width="450" /> <img src="images/agent_2_competition_reward" width="450" />
+
+<img src="images/agent_3_competition_reward" width="450" /> <img src="images/agent_4_competition_reward" width="450" />
+
+Based on the cumulative reward graphs it can be seen that the Monte Carlo agent consistently has a cumulative reward of about 20, with the large dips likely being the games where it was defeated. Even with the occasional drop in cumulative reward, the averaged score of the Monte Carlo agent is still the highest of all four agents over the course of the 100 games. As expected of an agent that does not learn there are no significant trends in its cumulative reward. Despite the Monte Carlo search agent being dominant against the other agents, there are some positives signs for some of the other agents. Player 1, the Neural Network agent, does show signs that it is learning, since there appears to be a slight upward trend in its cumulative reward. As the games go on, the Neural Network's cumulative reward appears to become more consistent, with less severe drops in score, contributing to an increasing average. We speculate that with enough epochs/games the Neural Network agent would eventually beat out the stagnant Monte Carlo agent. Agent 4, the Ensemble voting regressor, while not having as high of an average as the Monte Carlo of Neural Network agents, does have the same amount of wins as the Neural Network agent and exhibits a better than Agent 3. However, it is hard to tell if it is learning since there is no gradual increase in its cumulative reward in later epochs. An alternative view is that the Ensemble is learning, since it is winning more games in the later epochs. Agent 3, the Random Forest, has nothing positive as it has the lowest average cumulative reward, wins the least amount of games, and does not appear to have an increasing cumulative reward. A potential positive for the Random Forest is that it may be learning, since both of its wins occur in the later epochs. Overall, for the parameters used on the machine learning algorithms, the Neural Network agent exhibits the most promise, but for the epochs tested is eclipsed by the Monte Carlo agent. However, different combinations of different parameters could have yielded more or less impressive learning for the three machine learning algorithms, but such testing fell outside of our time limitations.
 
 ## References:
 
