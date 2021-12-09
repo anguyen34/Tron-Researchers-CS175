@@ -4,6 +4,7 @@ title:	Final Report
 ---
 
 ## Video:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wnDA77m3jnc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Project Summary:
 For our project, we conducted research of various parameters across three different machine learning algorithms and Monte Carlo search, all of which were used as functional approximators for reinforcement Q-learning. We studied how changing the values of the selected parameters would impact the success of each policy in simulated games against other policies with the same algorithm, but using parameters we defined as the baseline parameters. The platform used for conducting our research was the Tron environment from ColosseumRL, a multiagent reinforcement learning environment comprising several different games. The game we chose, Tron as implemented in ColosseumRL is the Tron light cycles subgame, which is a variation of the snake game concept, but here the goal is to force opponents into walls or trails, while simultaneously avoiding them. However, unlike the original Tron light cycles subgame which was a player versus three AI, the Tron environment we used was four AI playing against each other. 
