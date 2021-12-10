@@ -103,6 +103,66 @@ title:	Collected Data Images
 
 ## Ensemble
 
+### AdaBoost Number of Estimators
+
+### AdaBoost Loss Function
+
+<img src="images/ensemble/loss/ensemble_heat_ada_lossfunction.png?raw=true" width="500" />
+
+#### Linear
+
+<img src="images/ensemble/loss/ensemble_cumulative_ada_loss_linear.png?raw=true" width="500" /> <img src="images/ensemble/loss/ensemble_delta_ada_loss_linear.png?raw=true" width="500" />
+
+#### Exponential
+
+<img src="images/ensemble/loss/ensemble_cumulative_ada_loss_exponential.png?raw=true" width="500" /> <img src="images/ensemble/loss/ensemble_delta_ada_loss_exponential.png?raw=true" width="500" />
+
+#### Square
+
+<img src="images/ensemble/loss/ensemble_cumulative_ada_loss_square.png?raw=true" width="500" /> <img src="images/ensemble/loss/ensemble_delta_ada_loss_square.png?raw=true" width="500" />
+
+### SVM Kernel Function
+
+<img src="images/ensemble/kernal/ensemble_heat_svrkernal.png?raw=true" width="500" />
+
+#### Linear
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_linear.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_linear.png?raw=true" width="500" />
+
+#### Poly
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_poly.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_poly.png?raw=true" width="500" />
+
+#### RBF
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_rbf.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_rbf.png?raw=true" width="500" />
+
+#### Linear
+
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_sigmoid.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_sigmoid.png?raw=true" width="500" />
+
+### MLP Activation Function
+
+<img src="images/ensemble/activation/ensemble_heat_mlp_activation.png?raw=true" width="500" />
+
+#### ReLU
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_relu.png?raw=true" width="500" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_relu.png?raw=true" width="500" />
+
+#### Identity
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_identity.png?raw=true" width="500" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_identity.png?raw=true" width="500" />
+
+#### Logistic
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_logistic.png?raw=true" width="500" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_logistic.png?raw=true" width="500" />
+
+#### TanH
+
+<img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_tanh.png?raw=true" width="500" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_tanh.png?raw=true" width="500" />
+
+### MLP Number of Layers
+
 ### Epsilon
 
 <img src="images/ensemble/epsilon/ensemble_heat_epsilon.png?raw=true" width="500" />
