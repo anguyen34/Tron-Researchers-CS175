@@ -123,23 +123,23 @@ title:	Collected Data Images
 
 ### SVM Kernel Function
 
-<img src="images/ensemble/kernal/ensemble_heat_svrkernal.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_heat_svr_kernal.png?raw=true" width="500" />
 
 #### Linear
 
-<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_linear.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_linear.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_linear.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_linear.png?raw=true" width="500" />
 
 #### Poly
 
-<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_poly.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_poly.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_poly.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_poly.png?raw=true" width="500" />
 
 #### RBF
 
-<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_rbf.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_rbf.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_rbf.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_rbf.png?raw=true" width="500" />
 
 #### Linear
 
-<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_sigmoid.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernal_sigmoid.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_sigmoid.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_sigmoid.png?raw=true" width="500" />
 
 ### MLP Activation Function
 
@@ -162,6 +162,40 @@ title:	Collected Data Images
 <img src="images/ensemble/activation/ensemble_cumulative_mlp_activation_tanh.png?raw=true" width="500" /> <img src="images/ensemble/activation/ensemble_delta_mlp_activation_tanh.png?raw=true" width="500" />
 
 ### MLP Number of Layers
+
+<img src="images/ensemble/layers/ensemble_heat_mlp_numlayers.png?raw=true" width="500" />
+
+#### 1 Layer
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_1.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_1.png?raw=true" width="500" />
+
+#### 2 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_2.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_2.png?raw=true" width="500" />
+
+#### 5 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_5.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_5.png?raw=true" width="500" />
+
+#### 10 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_10.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_10.png?raw=true" width="500" />
+
+#### 25 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_25.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_25.png?raw=true" width="500" />
+
+#### 50 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_50.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_50.png?raw=true" width="500" />
+
+#### 100 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_100.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_100.png?raw=true" width="500" />
+
+#### 200 Layers
+
+<img src="images/ensemble/layers/ensemble_cumulative_mlp_numlayers_200.png?raw=true" width="500" /> <img src="images/ensemble/layers/ensemble_delta_mlp_numlayers_200.png?raw=true" width="500" />
 
 ### Epsilon
 
