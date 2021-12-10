@@ -105,76 +105,76 @@ title:	Collected Data Images
 
 ### Epsilon
 
-<img src="images/ensemble/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_heat_epsilon.png?raw=true" width="500" />
 
 #### ε = 0.01
 
-<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.01.png?raw=true" width="500" />
 
 #### ε = 0.05
 
-<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.05.png?raw=true" width="500" />
 
 #### ε = 0.10
 
-<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.1.png?raw=true" width="500" />
 
 #### ε = 0.25
 
-<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.25.png?raw=true" width="500" />
 
 #### ε = 0.50
 
-<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
+<img src="images/ensemble/epsilon/ensemble_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/ensemble_delta_Epsilon_0.5.png?raw=true" width="500" />
 
 ## Random Forest
 
 ### Epsilon
 
-<img src="images/forest/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_heat_epsilon.png?raw=true" width="500" />
 
 #### ε = 0.01
 
-<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/forest/epsilon/forest_delta_Epsilon_0.01.png?raw=true" width="500" />
 
 #### ε = 0.05
 
-<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/forest/epsilon/forest_delta_Epsilon_0.05.png?raw=true" width="500" />
 
 #### ε = 0.10
 
-<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/forest/epsilon/forest_delta_Epsilon_0.1.png?raw=true" width="500" />
 
 #### ε = 0.25
 
-<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/forest/epsilon/forest_delta_Epsilon_0.25.png?raw=true" width="500" />
 
 #### ε = 0.50
 
-<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
+<img src="images/forest/epsilon/forest_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/forest/epsilon/forest_delta_Epsilon_0.5.png?raw=true" width="500" />
 
 ## Monte Carlo Search
 
 ### Epsilon
 
-<img src="images/mcsearch/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_heat_epsilon.png?raw=true" width="500" />
 
 #### ε = 0.01
 
-<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.01.png?raw=true" width="500" />
 
 #### ε = 0.05
 
-<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.05.png?raw=true" width="500" />
 
 #### ε = 0.10
 
-<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.1.png?raw=true" width="500" />
 
 #### ε = 0.25
 
-<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.25.png?raw=true" width="500" />
 
 #### ε = 0.50
 
-<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.5.png?raw=true" width="500" />
