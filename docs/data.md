@@ -159,6 +159,44 @@ title:	Collected Data Images
 
 ### Max Depth
 
+<img src="images/forest/depth/forest_heat_maxdepth.png?raw=true" width="500" />
+
+#### D = 1
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_1.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_1.png?raw=true" width="500" />
+
+#### D = 2
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_2.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_2.png?raw=true" width="500" />
+
+#### D = 5
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_5.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_5.png?raw=true" width="500" />
+
+#### D = 10
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_10.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_10.png?raw=true" width="500" />
+
+#### D = 25
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_25.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_25.png?raw=true" width="500" />
+
+#### D = 50
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_50.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_50.png?raw=true" width="500" />
+
+#### D = 100
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_100.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_100.png?raw=true" width="500" />
+
+#### D = 200
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_200.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_200.png?raw=true" width="500" />
+
+#### No Max Depth
+
+<img src="images/forest/depth/forest_cumulative_Max Depth_None.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_None.png?raw=true" width="500" />
+
 ### Max Leaf Nodes
 
 ### Epsilon
