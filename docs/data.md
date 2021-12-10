@@ -47,11 +47,11 @@ title:	Collected Data Images
 
 ### Number of Nodes per Layer
 
-<img src="images/neural/layers/neural_heat_num_nodes.png?raw=true" width="500" />
+<img src="images/neural/nodes/neural_heat_num_nodes.png?raw=true" width="500" />
 
 #### 1 Node per Layer
 
-<img src="images/nodes/layers/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/layers/neural_delta_Nodes Per Layer_1.png.png?raw=true" width="500" />
+<img src="images/nodes/nodes/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_1.png.png?raw=true" width="500" />
 
 #### 2 Nodes per Layer
 
@@ -91,7 +91,7 @@ title:	Collected Data Images
 
 #### ε = 0.10
 
-<img src="images/neural/epsilon/neural_cumulative_Epsilon_0.10.png?raw=true" width="500" /> <img src="images/neural/epsilon/neural_delta_Epsilon_0.10.png?raw=true" width="500" />
+<img src="images/neural/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/neural/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
 
 #### ε = 0.25
 
@@ -99,10 +99,82 @@ title:	Collected Data Images
 
 #### ε = 0.50
 
-<img src="images/neural/epsilon/neural_cumulative_Epsilon_0.50.png?raw=true" width="500" /> <img src="images/neural/epsilon/neural_delta_Epsilon_0.50.png?raw=true" width="500" />
+<img src="images/neural/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/neural/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
 
 ## Ensemble
 
+### Epsilon
+
+<img src="images/ensemble/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+
+#### ε = 0.01
+
+<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+
+#### ε = 0.05
+
+<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+
+#### ε = 0.10
+
+<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+
+#### ε = 0.25
+
+<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+
+#### ε = 0.50
+
+<img src="images/ensemble/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/ensemble/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
+
 ## Random Forest
 
+### Epsilon
+
+<img src="images/forest/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+
+#### ε = 0.01
+
+<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+
+#### ε = 0.05
+
+<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+
+#### ε = 0.10
+
+<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+
+#### ε = 0.25
+
+<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+
+#### ε = 0.50
+
+<img src="images/forest/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/forest/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
+
 ## Monte Carlo Search
+
+### Epsilon
+
+<img src="images/mcsearch/epsilon/neural_heat_epsilon.png?raw=true" width="500" />
+
+#### ε = 0.01
+
+<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.01.png?raw=true" width="500" />
+
+#### ε = 0.05
+
+<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.05.png?raw=true" width="500" />
+
+#### ε = 0.10
+
+<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.1.png?raw=true" width="500" />
+
+#### ε = 0.25
+
+<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.25.png?raw=true" width="500" />
+
+#### ε = 0.50
+
+<img src="images/mcsearch/epsilon/neural_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/neural_delta_Epsilon_0.5.png?raw=true" width="500" />
