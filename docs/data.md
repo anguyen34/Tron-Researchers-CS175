@@ -51,7 +51,7 @@ title:	Collected Data Images
 
 #### 1 Node per Layer
 
-<img src="images/nodes/nodes/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_1.png.png?raw=true" width="500" />
+<img src="images/neural/nodes/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_1.png.png?raw=true" width="500" />
 
 #### 2 Nodes per Layer
 
