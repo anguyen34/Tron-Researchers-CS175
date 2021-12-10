@@ -105,6 +105,32 @@ title:	Collected Data Images
 
 ### AdaBoost Number of Estimators
 
+<img src="images/ensemble/estimators/ensemble_heat_ada_estimators.png?raw=true" width="500" />
+
+#### 10 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_10.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_10.png?raw=true" width="500" />
+
+#### 25 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_25.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_25.png?raw=true" width="500" />
+
+#### 50 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_50.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_50.png?raw=true" width="500" />
+
+#### 100 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_100.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_100.png?raw=true" width="500" />
+
+#### 150 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_150.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_150.png?raw=true" width="500" />
+
+#### 200 Estimators
+
+<img src="images/ensemble/estimators/ensemble_cumulative_ada_estimators_200.png?raw=true" width="500" /> <img src="images/ensemble/estimators/ensemble_delta_ada_estimators_200.png?raw=true" width="500" />
+
 ### AdaBoost Loss Function
 
 <img src="images/ensemble/loss/ensemble_heat_ada_lossfunction.png?raw=true" width="500" />
@@ -127,7 +153,7 @@ title:	Collected Data Images
 
 #### Linear
 
-<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernal_linear.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_linear.png?raw=true" width="500" />
+<img src="images/ensemble/kernal/ensemble_cumulative_svr_kernel_linear.png?raw=true" width="500" /> <img src="images/ensemble/kernal/ensemble_delta_svr_kernel_linear.png?raw=true" width="500" />
 
 #### Poly
 
