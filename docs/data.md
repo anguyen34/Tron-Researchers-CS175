@@ -129,6 +129,38 @@ title:	Collected Data Images
 
 ## Random Forest
 
+### Number of Estimators
+
+<img src="images/forest/estimators/forest_heat_estimators.png?raw=true" width="500" />
+
+#### 10 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_10.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_10.png?raw=true" width="500" />
+
+#### 25 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_25.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_25.png?raw=true" width="500" />
+
+#### 50 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_50.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_50.png?raw=true" width="500" />
+
+#### 100 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_100.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_100.png?raw=true" width="500" />
+
+#### 150 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_150.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_150.png?raw=true" width="500" />
+
+#### 200 Estimators
+
+<img src="images/forest/estimators/forest_cumulative_estimators_200.png?raw=true" width="500" /> <img src="images/forest/estimators/forest_delta_estimators_200.png?raw=true" width="500" />
+
+### Max Depth
+
+### Max Leaf Nodes
+
 ### Epsilon
 
 <img src="images/forest/epsilon/forest_heat_epsilon.png?raw=true" width="500" />
