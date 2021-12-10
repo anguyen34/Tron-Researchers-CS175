@@ -51,7 +51,7 @@ title:	Collected Data Images
 
 #### 1 Node per Layer
 
-<img src="images/neural/nodes/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_1.png.png?raw=true" width="500" />
+<img src="images/neural/nodes/neural_cumulative_Nodes Per Layer_1.png?raw=true" width="500" /> <img src="images/neural/nodes/neural_delta_Nodes Per Layer_1.png?raw=true" width="500" />
 
 #### 2 Nodes per Layer
 
@@ -155,26 +155,46 @@ title:	Collected Data Images
 
 ## Monte Carlo Search
 
-### Epsilon
+### Depth
 
-<img src="images/mcsearch/epsilon/mcsearch_heat_epsilon.png?raw=true" width="500" />
+#### D = 1
+
+<img src="images/mcsearch/depth/mcsearch_cumulative_depth_1.png?raw=true" width="500" /> <img src="images/mcsearch/depth/mcsearch_delta_depth_1.png?raw=true" width="500" />
+
+#### D = 2
+
+<img src="images/mcsearch/depth/mcsearch_cumulative_depth_2.png?raw=true" width="500" /> <img src="images/mcsearch/depth/mcsearch_delta_depth_2.png?raw=true" width="500" />
+
+#### D = 3
+
+<img src="images/mcsearch/depth/mcsearch_cumulative_depth_3.png?raw=true" width="500" /> <img src="images/mcsearch/depth/mcsearch_delta_depth_3.png?raw=true" width="500" />
+
+#### D = 4
+
+<img src="images/mcsearch/depth/mcsearch_cumulative_depth_4.png?raw=true" width="500" /> <img src="images/mcsearch/depth/mcsearch_delta_depth_4.png?raw=true" width="500" />
+
+#### D = 5
+
+<img src="images/mcsearch/depth/mcsearch_cumulative_depth_5.png?raw=true" width="500" /> <img src="images/mcsearch/depth/mcsearch_delta_depth_5.png?raw=true" width="500" />
+
+### Epsilon
 
 #### ε = 0.01
 
-<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.01.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.01.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_epsilon_0.01.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_epsilon_0.01.png?raw=true" width="500" />
 
 #### ε = 0.05
 
-<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.05.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.05.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_epsilon_0.05.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_epsilon_0.05.png?raw=true" width="500" />
 
 #### ε = 0.10
 
-<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.1.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.1.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_epsilon_0.1.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_epsilon_0.1.png?raw=true" width="500" />
 
 #### ε = 0.25
 
-<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.25.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.25.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_epsilon_0.25.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_epsilon_0.25.png?raw=true" width="500" />
 
 #### ε = 0.50
 
-<img src="images/mcsearch/epsilon/mcsearch_cumulative_Epsilon_0.5.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_Epsilon_0.5.png?raw=true" width="500" />
+<img src="images/mcsearch/epsilon/mcsearch_cumulative_epsilon_0.5.png?raw=true" width="500" /> <img src="images/mcsearch/epsilon/mcsearch_delta_epsilon_0.5.png?raw=true" width="500" />
