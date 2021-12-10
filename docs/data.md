@@ -3,6 +3,9 @@ layout:	default
 title:	Collected Data Images
 ---
 
+This page of our website contains all of the data graphs that we had generated when collecting data, including the graphs already used in our final report.
+
+
 ## Neural Network
 
 ### Activation Function
