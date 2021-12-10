@@ -161,10 +161,6 @@ title:	Collected Data Images
 
 <img src="images/forest/depth/forest_heat_maxdepth.png?raw=true" width="500" />
 
-#### D = 1
-
-<img src="images/forest/depth/forest_cumulative_Max Depth_1.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_1.png?raw=true" width="500" />
-
 #### D = 2
 
 <img src="images/forest/depth/forest_cumulative_Max Depth_2.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_2.png?raw=true" width="500" />
@@ -198,6 +194,36 @@ title:	Collected Data Images
 <img src="images/forest/depth/forest_cumulative_Max Depth_None.png?raw=true" width="500" /> <img src="images/forest/depth/forest_delta_Max Depth_None.png?raw=true" width="500" />
 
 ### Max Leaf Nodes
+
+<img src="images/forest/leaf/forest_heat_leafnodes.png?raw=true" width="500" />
+
+#### 3 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_3.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_3.png?raw=true" width="500" />
+
+#### 10 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_10.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_10.png?raw=true" width="500" />
+
+#### 25 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_25.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_25.png?raw=true" width="500" />
+
+#### 50 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_50.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_50.png?raw=true" width="500" />
+
+#### 100 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_100.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_100.png?raw=true" width="500" />
+
+#### 200 Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_200.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_200.png?raw=true" width="500" />
+
+#### No Max Leaves per Node
+
+<img src="images/forest/leaf/forest_cumulative_Max Leaf Nodes_None.png?raw=true" width="500" /> <img src="images/forest/leaf/forest_delta_Max Leaf Nodes_None.png?raw=true" width="500" />
 
 ### Epsilon
 
